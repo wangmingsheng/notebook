@@ -1,0 +1,69 @@
+切图命名 保存格式 png8 还是png24 色值已满否 切的图片大小没关系，固定img 或者background-size就可以了
+
+协议 call://电话号码   emailto://邮箱
+ img标签图片带微信二维码右键长按能出来自动识别 
+
+svn locked  删除目录重新获取
+
+发布版本 png图片压缩
+
+建文件夹 命名格式 访问路径 配站点
+
+高清屏幕retina屏幕要重写一套样式？
+
+确定是否缓存 改html 或者弄个背景色
+
+xhrFields = {withCredentials: true}; 允许跨域  如果是上传文件流方式上传  可能会报错  把该字段去掉试试
+
+手机上 html调试  about:inspect
+
+父元素有浮动有有定位，这样会出现不可预知的问题。比如子元素相对父元素定位的时候会出现问题。
+
+zepto tap事件？？ 和click区别
+
+video 不属于盒子模型 所以很多样式写了无效？
+
+
+php 和go 语言的ajax不一样 具体看项目
+
+
+
+js 一些api
+
+Math   floor ceil round random abs max min 
+
+Date var day = new Date()  day.getTime() Date.parse(day) getYear getMonth getDay getHours getMinute  day.setHours 
+
+document.cookie
+
+
+
+配置路径  appach配置的路由  项目目录下的路由.htaccess  
+
+js让其它dom失去焦点  对某个input focus   
+
+$dom.attr('', value | null)  $dom.prop('', true | false)
+
+
+
+
+chrom bug input file 不弹出了
+
+
+微信 html:
+video poster视频开始播放后要移除，不然在部分iPhone上退出界面后再进去又出现poster 
+只有微信的一个事件触发时调用play才有效果
+
+苹果手机双击两下会跳动
+苹果手机上的html有很多默认事件，这些都是通过preventDefault阻止的
+
+div focus blur （focusin focusout 支持冒泡）事件有效吗  
+了解html  focusable元素  
+1： 表单元素 
+2： 链接元素
+3： 设置了tabindex属性的元素
+4： 设置了contenteditable=‘true’属性的元素
+5： window： 当页面窗口从隐藏变成前置可见的时候
+
+
+关于ajax请求的问题  复杂问题简单话  同一种请求不要重复，不要考虑同一种请求不同时间请求收到不同结果这种可能。
