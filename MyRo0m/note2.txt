@@ -55,7 +55,7 @@ video poster视频开始播放后要移除，不然在部分iPhone上退出界面后再进去又出现poster
 只有微信的一个事件触发时调用play才有效果
 
 苹果手机双击两下会跳动
-苹果手机上的html有很多默认事件，这些都是通过preventDefault阻止的
+
 
 div focus blur （focusin focusout 支持冒泡）事件有效吗  
 了解html  focusable元素  
@@ -66,18 +66,3 @@ div focus blur （focusin focusout 支持冒泡）事件有效吗
 5： window： 当页面窗口从隐藏变成前置可见的时候
 
 
-关于ajax请求的问题  复杂问题简单话  同一种请求不要重复，不要考虑同一种请求不同时间请求收到不同结果这种可能。
-
-
-源的概念  站点的概念  
-ajax erro 原因 没响应  
-
-react jsx 会过滤 undefined null 变量值？？
-
-设置自然的动画： 关键想象动画过程
-animation moving 1s linear 0s infinite alternate(normal)
-@keyframes moving 
-{
-  0% {}
-  100% {}
-}
