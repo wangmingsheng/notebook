@@ -1,6 +1,6 @@
 切图命名 保存格式 png8 还是png24 色值已满否 切的图片大小没关系，固定img 或者background-size就可以了
 
-协议 call://电话号码   emailto://邮箱
+协议 tell://电话号码   emailto://邮箱
  img标签图片带微信二维码右键长按能出来自动识别 
 
 svn locked  删除目录重新获取
