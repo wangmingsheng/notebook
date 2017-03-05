@@ -2,3 +2,5 @@ about:plugins  about:extentions
 
 intel cup xeon core celeron 
 处理器 第五代奔腾 第六代酷睿
+
+防火墙 会阻止白名单之外的程序与外部通讯  ping 是icmp协议
