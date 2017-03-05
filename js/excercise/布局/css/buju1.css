@@ -1,0 +1,35 @@
+#one {
+    width: 30%;
+    height: 50%;
+    float: left;
+    background-color: aqua;
+}
+#two{
+    width: 70%;
+    height: 100%;
+    float: right;
+    background-color: black;
+}
+#three{
+    width: 30%;
+    height: 50%;
+    float: left;
+    background-color: brown;
+}
+
+
+#one:hover{
+
+    animation:myfirst 2s linear;
+}
+#two:hover{
+    animation:myfirst 2s;
+}
+#three:hover{
+    animation:myfirst 2s;
+}
+
+@keyframes myfirst {
+    0% {width: 30%;height: 50%}
+    50% {width: 45%;height: 60%}
+}

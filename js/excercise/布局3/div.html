@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style rel="stylesheet">
+        #hh{
+            background-color: burlywood;
+            width: 500px;
+        }
+        #hh > div:nth-child(1){
+            background-color: red;
+            width: 200px;
+            height: 100px;
+            float: left;
+
+
+        }
+        #hh > div:nth-child(2){
+            background-color: green;
+            width: 600px;
+            height: 50px;
+            clear: left;
+        }
+        #hh > div:nth-child(3){
+            background-color: blue;
+            width: 300px;
+            height: 10px;
+            text-align: center;
+
+        }
+        #hh div:nth-of-type(1)+a{
+            background-color: black;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div id="hh">
+    <div></div>
+    <div></div>
+</div>
+<script ript type="text/javascript">
+    var name = "aaaaa";
+    var object = {
+        name:"My Object",
+        getNameFunc:function(){
+            var that = this;
+            return function(){
+                return that.name;
+            }
+        }
+    };
+</script>
+</body>
+</html>

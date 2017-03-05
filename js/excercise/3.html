@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div id="mydiv">
+    <a href="http://www.baidu.com">hello world!</a>
+</div>
+<p>
+    <a href="http://www.baidu.com">hahahah</a>
+</p>
+<button id="myButton">click</button>
+<script type="text/javascript">
+    var myDiv = document.querySelector("#mydiv");
+    myDiv.addEventListener("click",myF,false);
+    myDiv.addEventListener("click",myF2,false);
+
+    var myButton = document.querySelector("#myButton");
+    myButton.addEventListener("click",function(ev){
+        myDiv.removeEventListener("click",myF,false);
+        myDiv.removeEventListener("click",myF2,false);
+    },false);
+
+    function myF(ev){
+        alert(this.innerHTML);
+        ev.preventDefault();
+    }
+    function myF2(ev){
+        alert(this.id);
+        ev.preventDefault();
+    }
+</script>
+
+</body>
+</html>

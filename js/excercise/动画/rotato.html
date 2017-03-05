@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <!--<link rel="stylesheet" type="text/css" href="rotato.css">-->
+    <style type="text/css">
+        #square{
+            width: 500px;
+            height: 500px;
+            background-color: red;
+            letter-spacing: -2px;
+            position: absolute;
+            top:50%;
+            left: 50%;
+            margin-top: -250px;
+            margin-left: -250px;
+        }
+        body div:nth-of-type(2){
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <img id="square" src="./1.jpg" onclick="var stringarray = 'this-a-bird';alert(stringarray.split('-').join(''))"/>
+</body>
+</html>

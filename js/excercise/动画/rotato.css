@@ -1,0 +1,31 @@
+/*base code*/
+.animated {
+    animation-fill-mode: both;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+}
+
+/*the animation definition*/
+@-webkit-keyframes rotate {
+    0% {
+        transform-origin: center;
+        transform: rotate3d(0, 0, 1, -200deg)
+    }
+    100% {
+        transform-origin: center;
+        transform: none
+    }
+}
+@keyframes rotate {
+    0% {
+        transform-origin: center;
+        transform: rotate3d(0, 0, 1, -200deg)
+    }
+    100% {
+        transform-origin: center;
+        transform: none
+    }
+}
+.rotate {
+    animation-name: rotate
+}
