@@ -7,7 +7,8 @@ react 部分
 
 React 中 Element 与 Component 的区别是？
 
-React Element 是描述屏幕上所见内容的数据结构，是对于 UI 的对象表述。典型的 React Element 就是利用 JSX 构建的声明式代码片然后被转化为createElement的调用组合；
+React Element 是描述屏幕上所见内容的数据结构，是对于 UI 的对象表述。
+典型的 React Element 就是利用 JSX 构建的声明式代码片然后被转化为createElement的调用组合；
 React Component 则是可以接收参数输入并且返回某个 React Element 的函数或者类。
 
 React 中 refs 的作用是什么？

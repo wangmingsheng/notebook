@@ -27,3 +27,33 @@ Event.prototype = {
 };
 
 module.exports = new Event;
+
+
+//简单的事件监听应该这么写
+function handleEvent (eventName, {onElement, withCallback, useCapture = false} = {}, thisArg) {
+    const element = onElement || document.documentElement
+
+    function handler (event) {
+        if (typeof withCallback === 'function') {
+            withCallback.call(thisArg, event)
+        }
+    }
+
+    handler.destroy = function () {
+        return element.removeEventListener(eventName, handler, useCapture)
+    }
+
+    element.addEventListener(eventName, handler, useCapture)
+    return handler
+}
+
+// 你需要的时候
+const handleClick = handleEvent('click', {
+        onElement: element,
+        withCallback: function (event) {
+            console.log('');
+        }
+});
+
+// 你想删除它的时候
+handleClick.destroy();

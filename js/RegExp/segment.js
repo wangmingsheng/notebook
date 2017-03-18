@@ -52,3 +52,6 @@
  split(pattern)	                返回字符串按指定 pattern 拆分的数组
 
  */
+
+//example:
+
