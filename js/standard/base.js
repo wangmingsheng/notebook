@@ -38,6 +38,7 @@ Function.prototype.after = function (func) {
         return func.apply(this, arguments);
     }
 };
+
 Function.prototype.before = function (func) {
     var _self = this;
     return function () {
