@@ -1,0 +1,31 @@
+1. 怎么写模板 
+
+ 一个页面一般有3个css   reset.css  common.css index.css
+
+pscc可以转换html
+
+css 位置写到最上面 盒子模型
+
+切图方法 选中要切图的图层 转为智能对象 ctr c ctr n
+
+浮动、定位的包裹性
+
+定宽 还是定padding 分析原型
+
+开始先从公共开始写
+
+css层级 .xxx-.xxx-.xxx-.xxx 用类名来代替css层级  超过四层后 重新命名
+
+命名 导航 nav 头部 header 切换tab 按钮btn 公共public 组group 列表list 选中active 内容器inner 包裹器wraper 详情detail 内容content
+
+chrome调试直接保存本地 配置本地ide
+
+圆角多少直接量
+
+父容器有padding 子元素绝对定位 如果不写left的情况下是相对padding 不然是相对border
+
+切页面要考虑动态数据，可维护性
+
+绝对定位跟随  当一个元素设置absolute的时候，不设置top bottom left right的时候会在正常流（文档流）的位置浮动起来而不占据坑
+
+图片是写background 还是img  一般图标类型的写background 动态加载的写img
