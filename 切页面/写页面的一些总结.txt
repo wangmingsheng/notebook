@@ -16,7 +16,7 @@ css 位置写到最上面 盒子模型
 
 css层级 .xxx-.xxx-.xxx-.xxx 用类名来代替css层级  超过四层后 重新命名
 
-命名 导航 nav 头部 header 切换tab 按钮btn 公共public 组group 列表list 选中active 内容器inner 包裹器wraper 详情detail 内容content
+命名 导航 nav 头部 header 切换tab 按钮btn 公共public cm- 组group 列表list 选中active 内容器inner 包裹器wraper 详情detail 内容content 左右-l-r 模块module 容器块box block container 表单项user-form-item
 
 chrome调试直接保存本地 配置本地ide
 
@@ -29,3 +29,5 @@ chrome调试直接保存本地 配置本地ide
 绝对定位跟随  当一个元素设置absolute的时候，不设置top bottom left right的时候会在正常流（文档流）的位置浮动起来而不占据坑
 
 图片是写background 还是img  一般图标类型的写background 动态加载的写img
+
+规范的约定 块级元素不能和行级元素同一层级的  inline-block除外
