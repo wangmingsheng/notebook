@@ -61,3 +61,13 @@ function domLoaded() {
   document.removeEventListener('DOMContentLoaded', domLoaded);
 }
 document.addEventListener('DOMContentLoaded', domLoaded);
+
+;
+document.addEventListener('touchmove', function (ev){
+    ev.preventDefault();
+}, false);
+
+document.querySelector('.menuright ').addEventListener('touchmove', function (ev){
+    ev.stopPropagation();
+}, false);
+
