@@ -1,0 +1,26 @@
+var DataFactory = require('./DataFactory');
+
+function ProjectData() {}
+
+ProjectData.prototype = Object.create(new DataFactory, {
+	getSource: {
+		value: function(callback) {
+			var data = Interface.getProject();
+
+			if (data) {
+				var items = {};
+				for (var i = 0; i < data.length; i++) {
+					items[data[i]._id] = data[i];
+				}
+				this.list = data;
+				this.source = items;
+			}
+
+			typeof(callback) == 'function' && callback();
+		}
+	}
+});
+
+ProjectData.prototype.constructor = ProjectData;
+
+module.exports = new ProjectData

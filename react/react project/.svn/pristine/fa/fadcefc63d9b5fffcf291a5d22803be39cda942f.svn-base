@@ -1,0 +1,154 @@
+var SwitchBox = require('../../components/SwitchBox');
+var PushUpDialog = require('../../components/PushUpDialog');
+var AcrossMbShow = require('../../components/AcrossMbShow');
+var Member = require('../../components/Member');
+var TaskHandle = require('../../handle/teamwork/Task');
+var ProjectData = require('../../data/Project');
+
+module.exports = React.createClass({
+	goto: function() {
+		Utils.setUrl('/myjoinedtask');
+		var ModuleManage = require('../Manage');
+		ModuleManage.getModule('myjoinedtask', function(Virtual) {
+			Event.trigger('SwitchModule', <Virtual/>);
+		});
+	},
+	transToStr: function(obj) {
+		var result = [];
+		for(var i in obj) {
+			result.push(i)
+		}
+		return result.join(' ');
+	},
+	completed: function() {
+		var param ={
+			title: this.state.value.title,
+			assign: this.transToStr(this.state.selected),
+			entry: this.state.value.entry.id,
+			deadline: this.state.value.deadline
+		};
+		if(!param.title.trim()) {
+			Interface.alert('任务名称不能为空');
+			return false;
+		}
+		if(!param.entry) {
+			Interface.alert('任务清单不能为空');
+			return false;
+		}
+		this.setHeader('提交中');
+
+		TaskHandle.create(ProjectData.currentId, param, function(result) {
+			if(result.code == 200) {
+				return history.back();
+			}
+			this.setHeader();
+		}.bind(this));
+	},
+	pushDialog: function(type, selectedData) {
+		switch(type) {
+			case 2:
+				this.setHeader();
+				selectedData && (this.state.selected  = $.extend({}, selectedData));
+				break;
+			case 4:
+				this.setHeader();
+				selectedData && (this.state.value.entry = selectedData);
+				break;
+		}
+		this.setState({selectDialog: type});
+	},
+	taskTittle: function(ev) {
+		this.state.value.title = $(ev.currentTarget).val();
+	},
+	switchEvent: function() {
+		this.state.value.visibility = !this.state.value.visibility;
+		this.setState(this.state);
+	},
+	setHeader: function(text) {
+		var headObject = {title: '新建任务', back: {text: '后退'}, operat: {text: '完成', event: this.completed}};
+		if(text) {
+			headObject.operat.event = headObject.back.event = function() {};
+			headObject.operat.text = text;
+			headObject.operat.disabled = true;
+		}
+		Interface.setHeader(headObject);
+	},
+	dateChange: function(e) {
+		this.state.source.defaultTime = e.currentTarget.value;
+		this.setState(this.state);
+	},
+	selectDate: function(ev) {
+		$(ev.currentTarget).find('input').focus();
+		this.state.value.defaultTime = Utils.formatDate(this.state.value.deadline, 'YYYY-MM-DDTHH:mm');
+		if(!this.state.value.deadline) {
+			this.state.value.defaultTime = Utils.formatDate((new Date()).getTime() / 1000 - Config.timeCut, 'YYYY-MM-DD') + 'T00' + ':00';
+		}
+		this.setState(this.state);
+	},
+	setDeadlineDate: function(e) {
+		this.state.value.deadline = parseInt(Date.parse(e.currentTarget.value) / 1000 - Config.timeCut);
+		this.setState(this.state);
+	},
+	selectEntry: function() {
+		data = ProjectData.source[ProjectData.currentId].entrys.map(function(item) {
+						return {text: item.name, event: this.setEntry.bind(this, item)}
+					}.bind(this));
+		Interface.sheet(data);
+	},
+	setEntry: function(item) {
+		this.state.value.entry = {
+			id: item._id,
+			name: item.name
+		};
+		this.setState(this.state);
+	},
+	getInitialState: function() {
+		this.setHeader();
+		var value = {assign: '', deadline: 0, title: '', entry: {id: '', name: ''}, visibility: false, defaultTime: null};
+		return {value: value, selectDialog: false, selected: {}};
+	},
+	render: function() {
+		var timeTip = null;
+		if(this.state.value.deadline) timeTip = Utils.formatDate(this.state.value.deadline, 'YYYY-MM-DD HH:mm');
+		return <div className="newtask_page">
+					<ul>
+						<li><input type="text" placeholder="任务名称" onChange={this.taskTittle} /></li>
+					</ul>
+					<ul className="jump_option_list">
+						<li onClick={this.pushDialog.bind(this, 1)}>
+                            <div className="option">
+                                <span>分配给</span>
+                            </div>
+                            <div className="right_block"><span className="tip"><AcrossMbShow data={this.state.selected} /></span><i className="icon">&#xe606;</i></div>
+                        </li>
+						<li onClick={this.selectDate}>
+							<div className="option">
+								<span>截止时间</span>
+							</div>
+							<input type="datetime-local" value={this.state.value.defaultTime} onBlur={this.setDeadlineDate} onChange={this.dateChange}/>
+							<div className="right_block"><span className="tip">{timeTip}</span><i className="icon">&#xe606;</i></div>
+						</li>
+					</ul>
+					<ul className="jump_option_list">
+						<li onClick={this.selectEntry}>
+							<div className="option">
+								<span>任务清单</span>
+								<div className="show">
+									<span></span>
+								</div>
+							</div>
+							<div className="right_block">
+								<span className="tip">{this.state.value.entry.name}</span>
+								<i className="icon">&#xe606;</i>
+							</div>
+						</li>
+					</ul>
+					<ul className="jump_option_list">
+						<li><div className="option"><span>私密任务</span></div><span className="right_block"><SwitchBox checked={this.state.value.visibility} onChange={this.switchEvent}/></span></li>
+					</ul>
+					<PushUpDialog position={this.state.selectDialog == 1}>
+							<Member selected={this.state.selected} position={this.state.selectDialog == 1} callBack={this.pushDialog.bind(this, 2)}/>
+					</PushUpDialog>
+			</div>
+	}
+});

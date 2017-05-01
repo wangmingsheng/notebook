@@ -1,0 +1,26 @@
+module.exports = {
+	getModule: function(type, callback) {
+		switch (type.toLowerCase()) {
+			case 'selectmembers':
+				callback(require('./task/SelectMembers'));
+			break;
+			case 'tasks':
+				callback(require('./task/ProjectDetail'));
+			break;
+			case 'newtask':
+				callback(require('./task/NewTask'));
+			break;
+			case 'newtaskentry':
+				callback(require('./task/NewTaskEntry'));
+				break;
+			case 'partaketask':
+				callback(require('./task/PartakeTask'));
+			break;
+			case 'mytaskjoin': 
+				callback(require('./task/MyTaskJoin'));
+			break;
+			default :
+				callback(require('./task/Index'));
+		}
+	}
+};

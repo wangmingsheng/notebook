@@ -1,0 +1,44 @@
+
+module.exports = React.createClass({
+    oneSelected: function(id){
+        for(var i in this.state.select) {
+            if(i != id) this.state.select[i] = false;
+        }
+    },
+    rowSelectedEvent: function(id) {
+        if(this.props.type == 2) return;
+        this.state.select[id] = !this.state.select[id];
+        if(this.props.type == 1) {
+            this.oneSelected(id);
+            this.props.callBack && this.props.callBack(this.state.select);
+        }
+        this.setState(this.state);
+    },
+    componentWillReceiveProps: function(nProps) {
+        if (nProps.search != this.state.key) {
+            this.setState({search: nProps.search})
+        }
+    },
+    shouldComponentUpdate: function(nProps, nState) {
+        return this.state != nState;
+    },
+    getInitialState: function() {
+        return {select: this.props.selected || {}, source: this.props.source || {} , search: this.props.search || ''}
+    },
+    render: function() {
+        var liValue = [];
+        var source = this.state.source;
+        for(var key in source) {
+            var className = '';
+            if(this.state.select[key]) className = 'check';
+            if(this.state.search.length > 0 && source[key].display_name_pinyin.toLowerCase().indexOf(this.state.search.toLowerCase()) == -1) continue;
+            liValue.push(<li className={className} key={key} onClick={this.rowSelectedEvent.bind(this,key)}>
+                     <div className="avatar"><img src={source[key].avatar} alt=""/></div>
+                   <div className="member_name"><span>{source[key].display_name}</span></div>
+                </li>);
+        }
+        return <ul className="team_member_list">
+            {liValue}
+        </ul>
+    }
+});

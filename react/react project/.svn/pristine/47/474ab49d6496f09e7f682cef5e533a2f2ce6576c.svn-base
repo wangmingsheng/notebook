@@ -1,0 +1,77 @@
+var SwitchBox = require('../../components/SwitchBox');
+var PushUpDialog = require('../../components/PushUpDialog');
+var AcrossMbShow = require('../../components/AcrossMbShow');
+var Member = require('../../components/Member');
+var TaskHandle = require('../../handle/teamwork/Task');
+
+module.exports = React.createClass({
+	goto: function() {
+		Utils.setUrl('/myjoinedtask');
+		var ModuleManage = require('../Manage');
+		ModuleManage.getModule('myjoinedtask', function(Virtual) {
+			Event.trigger('SwitchModule', <Virtual/>);
+		});
+	},
+	completed: function() {
+		var param ={
+			title: this.state.value.title,
+			entry: '8de05457647be46cf57b82e7'
+		};
+		TaskHandle.create('82248a83e959ea8df57b3d60', param, function(result) {
+			if(result.code == 200) {
+				history.back();
+			}
+		});
+	},
+	pushOutDialog: function() {
+		this.setState({selectDialog: true});
+	},
+	pushInDialog: function(selectedData) {
+		this.state.selectDialog = false;
+		$.extend(this.state.selected, selectedData);
+		this.setState(this.state);
+		this.setThisHead();
+	},
+	taskTittle: function(ev) {
+		this.state.value.title = $(ev.currentTarget).val();
+	},
+	switchEvent: function() {
+		this.state.value.visibility = !this.state.value.visibility;
+		this.setState(this.state);
+	},
+	setThisHead: function() {
+		var headObject = {title: '新建任务', back: '后退', operat: {text: '完成', event: this.completed}};
+		Interface.setHeader(headObject);
+	},
+	getInitialState: function() {
+		this.setThisHead();
+		var value = {assign: '', deadline: 0, title: "", entry: '8de05457647be46cf57b82e7', visibility: true};
+		return {value:value, selectDialog: false, selected: {}};
+	},
+	render: function() {
+		return <div className="newtask_page">
+					<ul>
+						<li><input type="text" placeholder="任务名称" onChange={this.taskTittle} /></li>
+					</ul>
+					<ul className="jump_option_list">
+						<li onClick={this.pushOutDialog}>
+                            <div className="option">
+                                <span>分配给</span>
+                                <div className="show"><AcrossMbShow data={this.state.selected} /></div>
+                            </div>
+                            <div className="right_block"><span className="tip"></span><i className="icon">&#xe606;</i></div>
+                        </li>
+						<li onClick={this.completed}><div className="option"><span>截止时间</span></div><span className="right_block"><span className="tip"></span><i className="icon">&#xe606;</i></span></li>
+					</ul>
+					<ul className="jump_option_list">
+						<li><div className="option"><span>私密任务</span></div><span className="right_block"><SwitchBox checked={this.state.value.visibility} onChange={this.switchEvent}/></span></li>
+					</ul>
+					<PushUpDialog position={this.state.selectDialog}>
+						{
+							!this.state.selectDialog ? null :
+							<Member selected={this.state.value.assign} callBack={this.pushInDialog}/>
+						}
+					</PushUpDialog>
+			</div>
+	}
+});

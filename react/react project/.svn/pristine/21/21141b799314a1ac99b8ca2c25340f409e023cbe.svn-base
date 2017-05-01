@@ -1,0 +1,110 @@
+var SwitchBox = require('../../components/SwitchBox');
+var PushUpDialog = require('../../components/PushUpDialog');
+var AcrossMbShow = require('../../components/AcrossMbShow');
+var TaskHandle = require('../../handle/teamwork/Task');
+var SwipeLi = require('../../components/SwipeLi');
+module.exports = React.createClass({
+    completed: function() {
+
+    },
+    setHeader: function(text) {
+        var headObject = {title: '附件', back: {text: '返回', event: this.props.callBack}, operat: {text: '上传', event: this.completed}};
+        if(text) {
+            headObject.operat.text = text;
+            headObject.back.event = headObject.operat.event = function() {};
+        }
+        Interface.setHeader(headObject);
+    },
+    dataRequest: function() {
+        Interface.webEndRefresh();
+    },
+    inputEvent: function(e) {
+        this.setState({value: $(e.currentTarget).text()});
+    },
+    componentDidMount: function() {
+        Event.on('webBeginRefresh', this.dataRequest);
+    },
+    componentWillUnmount: function() {
+        Event.off('webBeginRefresh', this.dataRequest);
+    },
+    componentWillReceiveProps: function(nProps) {
+        if(nProps.position) {
+            this.setHeader();
+            this.setState({value: nProps.data || ''});
+        }
+    },
+    shouldComponentUpdate: function(nProps, nState) {
+        return this.state != nState;
+    },
+    getInitialState: function() {
+        if(this.props.position) this.setHeader();
+        return {value: this.props.data || ''};
+    },
+    render: function() {
+        return <div className="task_attachment_page">
+            <div className="content_list">
+                <ul className="attachment">
+                    <li>
+                        <ul>
+                            <SwipeLi swipe={true} scrollCount={1}>
+                                <div className="row_box">
+                                    <img src="" alt=""/>
+                                    <span className="text">
+                                    <div className="title">Mig_0126.png</div>
+                                    <div className="tip">Sunny 上传于2016年6月22日</div>
+                                 </span>
+                                </div>
+                            </SwipeLi>
+                        </ul>
+                        <a className="option" data-lock="ignore" href="javascript:;" >删除</a>
+                    </li>
+
+                    <li>
+                        <ul>
+                            <SwipeLi swipe={true} scrollCount={1}>
+                                <div className="row_box">
+                                    <img src="" alt=""/>
+                                    <span className="text">
+                                    <div className="title">Mig_0126.png</div>
+                                    <div className="tip">Sunny 上传于2016年6月22日</div>
+                                 </span>
+                                </div>
+                            </SwipeLi>
+                        </ul>
+                        <a className="option" data-lock="ignore" href="javascript:;" >删除</a>
+                    </li>
+
+                    <li>
+                        <ul>
+                            <SwipeLi swipe={true} scrollCount={1}>
+                                <div className="row_box">
+                                    <img src="" alt=""/>
+                                    <span className="text">
+                                    <div className="title">Mig_0126.png</div>
+                                    <div className="tip">Sunny 上传于2016年6月22日</div>
+                                 </span>
+                                </div>
+                            </SwipeLi>
+                        </ul>
+                        <a className="option" data-lock="ignore" href="javascript:;" >删除</a>
+                    </li>
+
+                    <li>
+                        <ul>
+                            <SwipeLi swipe={true} scrollCount={1}>
+                                <div className="row_box">
+                                    <img src="" alt=""/>
+                                    <span className="text">
+                                    <div className="title">Mig_0126.png</div>
+                                    <div className="tip">Sunny 上传于2016年6月22日</div>
+                                 </span>
+                                </div>
+                            </SwipeLi>
+                        </ul>
+                        <a className="option" data-lock="ignore" href="javascript:;" >删除</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    }
+});

@@ -1,0 +1,21 @@
+/**
+ * Created by Administrator on 2016/9/19.
+ */
+var SelectList = React.createClass({
+    getInitialState: function() {
+        return {};
+    },
+    render: function() {
+
+        return <div className="select_list">
+            <h4>
+                <span>{this.props.title}</span>
+            </h4>
+            <ul>
+                { this.props.children}
+            </ul>
+        </div>
+    }
+});
+
+module.exports = SelectList;

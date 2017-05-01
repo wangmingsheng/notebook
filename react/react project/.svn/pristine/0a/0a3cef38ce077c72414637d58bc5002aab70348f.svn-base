@@ -1,0 +1,29 @@
+var SelectMembers = require('./task/SelectMembers');
+var ProjectDetail = require('./task/ProjectDetail');
+var NewTask = require('./task/NewTask');
+
+var MyTaskJoin = require('./task/MyTaskJoin');
+
+module.exports = {
+	getModule: function(type, callback) {
+		switch (type.toLowerCase()) {
+			case 'selectmembers':
+				callback(SelectMembers);
+			break;
+			case 'tasks':
+				callback(ProjectDetail);
+			break;
+			case 'newtask':
+				callback(NewTask);
+			break;
+			case 'partaketask':
+				callback(require('./task/PartakeTask'));
+			break;
+			case 'mytaskjoin': 
+				callback(MyTaskJoin);
+			break;
+			default :
+				callback(require('./task/Index'));
+		}
+	}
+};

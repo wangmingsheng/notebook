@@ -1,0 +1,18 @@
+module.exports = React.createClass({
+    in: function() {
+        this.setState({flag: false});
+    },
+    out: function() {
+        this.setState({flag: true});
+    },
+    getInitialState: function() {
+        return {flag: false}
+    },
+    render: function() {
+        var className = ["pushup_dialog"];
+        if(this.state.flag) className.push('out');
+        return <div className={className.join(' ')}>
+            {this.props.children}
+        </div>
+    }
+});

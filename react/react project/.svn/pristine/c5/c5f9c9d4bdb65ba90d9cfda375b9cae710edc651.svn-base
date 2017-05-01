@@ -1,0 +1,9 @@
+var interface;
+if (window.IOS) interface = window.IOS;
+
+module.exports = {
+	getToken: function() {
+		if (interface) return interface.getToken();
+		return null;
+	}
+};

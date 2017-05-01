@@ -1,0 +1,75 @@
+var MemberSelectList = require('../../../components/MemberSelectList');
+var MemberData = require('../../../data/Member');
+var ProjectData = require('../../../data/Project');
+var TaskHandle = require('../../../handle/teamwork/Task');
+
+module.exports = React.createClass({
+    getDefaultProps: function() {
+      return {dataReq: true}
+    },
+    searchEvent: function(e) {
+        this.setState({search: $(e.currentTarget).val()});
+    },
+    transHaXiToStr: function(obj) {
+        var arr = [];
+        for(var i in obj) {
+            if(obj[i]) arr.push(i);
+        }
+        return arr.join(',');
+    },
+    completed: function() {
+        var param = {"member_ids": Utils.transHaXiToStr(this.state.selected)};
+        if(!param.member_ids) {
+            Interface.alert('未选择任何人');
+            return false;
+        }
+        this.setHeader('提交中');
+        TaskHandle.setFollow(this.props.taskId, param, function(result) {
+            if(result.code == 200) {
+               return this.props.callBack(this.state.selected);
+            }
+            this.setHeader();
+        }.bind(this));
+    },
+    componentWillReceiveProps: function(nProps) {
+        if(nProps.position) {
+            if(this.state.loading) this.dataRequest();
+            this.setHeader();
+        }
+        this.setState({selected: nProps.selected});
+    },
+    shouldComponentUpdate: function(nProps, nState) {
+        return this.state != nState;
+    },
+    setHeader: function(text) {
+        var headObject = {title: '参与者', back: {text:'取消', event:this.props.callBack}, operat: {text: '完成', event: this.completed}};
+        if(text) {
+            headObject.back.event = headObject.operat.event = function() {};
+            headObject.operat.text = text;
+        }
+        Interface.setHeader(headObject);
+    },
+    dataRequest: function() {
+        this.state.loading = false;
+        this.state.source = MemberData.getCollect(ProjectData.source[ProjectData.currentId].member_ids);
+        this.setState(this.state);
+    },
+    componentDidMount: function() {
+        if(this.props.dataReq) this.dataRequest();
+    },
+    getInitialState: function() {
+        if(this.props.position) this.setHeader();
+        return {search: '', selected: $.extend({},this.props.selected) || {}, source: {}, loading: true};
+    },
+    render: function() {
+        if(this.state.loading) return null;
+        return 	<div className="add_member_page">
+            <ul className="search_box" >
+                <li><input type="text" placeholder="&#xe601; 搜索" onChange={this.searchEvent}/></li>
+            </ul>
+            <div className="scroll_box">
+                <MemberSelectList source={this.state.source} search={this.state.search} selected={this.state.selected} />
+            </div>
+        </div>
+    }
+});

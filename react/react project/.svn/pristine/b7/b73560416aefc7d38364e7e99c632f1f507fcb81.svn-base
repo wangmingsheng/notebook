@@ -1,0 +1,94 @@
+var interface;
+var triggerEvent = {header: {}, other: {}};
+var triggerIds = 0;
+if (window.IOS) interface = window.IOS;
+
+window.trigger = function(eventName) {
+	var type = eventName.split('_')[0];
+	if (type == 'HEADER') return typeof(triggerEvent.header[eventName]) == 'function' && triggerEvent.header[eventName]();
+
+	var result = typeof(triggerEvent.other[eventName]) == 'function' && triggerEvent.other[eventName]();
+	triggerEvent.other = {};
+	return result;
+};
+
+function formatObject(data, isHeader) {
+	if (!data || typeof(data.event) != 'function') return data;
+	var key = (isHeader ? 'HEADER' : 'OTHER') + '_EVENT_' + ++triggerIds;
+
+	if (isHeader)
+		triggerEvent.header[key] = data.event;
+	else 
+		triggerEvent.other[key] = data.event;
+
+	data.event = key;
+	return data;
+}
+
+function formatList(data, isHeader) {
+	if (data instanceof Array) {
+		return data.map(function(item) {
+			return formatObject(item, isHeader);
+		}.bind(this));
+	}
+	return formatObject(data, isHeader);
+}
+
+module.exports = {
+	isOffsetState: function() {
+		if (!interface) return null;
+		return interface.isOffsetState();
+	},
+	getToken: function() {
+		if (!interface) {
+			return 'access_token=' + Config.accessToken;
+		}
+		return 'access_token=' + interface.getToken();
+	},
+	getTeamId: function() {
+		if (!interface) {
+			return Config.teamId;
+		}
+		return interface.getTeamId();
+	},
+	getProject: function() {
+		if (!interface || typeof(interface.getProject) != 'function') return null;
+		return JSON.parse(interface.getProject());
+	},
+	getMember: function() {
+		if (!interface || !interface.getMember) return null;
+		return JSON.parse(interface.getMember());
+	},
+	getDepartment: function() {
+		if (!interface || !interface.getDepartment) return null;
+		return JSON.parse(interface.getDepartment());
+	},
+	webPushInfo: function(url) {
+		if (!interface || !interface.webPushInfo) return null;
+		return interface.webPushInfo(url);
+	},
+	setHeader: function(data) {
+		if (!interface) return null;
+		triggerEvent.header = {};
+
+		formatObject(data.operat, true);
+		formatObject(data.back, true);
+		if (data.operat) formatList(data.operat.list, true);
+		return interface.setHeader(data);
+	},
+	sheet: function(data) {
+		if (!interface) return null;
+		//[{text: '删除', event: function() { this.run(); }.bind(this), color: 1}]
+		formatList(data);
+		return interface.sheet(data);
+	},
+	alert: function(data) {
+		if (!interface) return null;
+		if (typeof(data) == 'string') {
+			return interface.alert({title: '提示', list: [{text: data}]});
+		}
+
+		formatList(data.list);
+		return interface.alert(data);
+	}
+};

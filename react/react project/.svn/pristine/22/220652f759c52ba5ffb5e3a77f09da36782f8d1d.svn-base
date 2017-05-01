@@ -1,0 +1,28 @@
+ var MemberSelectList = require('../../components/MemberSelectList');
+var MemberData = require('../../data/Member');
+module.exports = React.createClass({
+	goto: function() {
+		Utils.setUrl('/module3');
+		var ModuleManage = require('../Manage');
+		ModuleManage.getModule('module3', function(Virtual) {
+			Event.trigger('SwitchModule', <Virtual/>);
+		});
+	},
+	searchEvent: function(e) {
+		this.refs.memberSelectList.updateSearch(e.target.value);
+	},
+	componentDidMount: function() {
+		this.refs.memberSelectList.updateSource(MemberData.source);
+	},
+	getInitialState: function() {
+		return {};
+	},
+	render: function() {
+		return <div className="add_member_page wrap">
+				<ul className="search_box">
+					<li><input type="text" placeholder="&#xe601; 搜索" onChange={this.searchEvent}/></li>
+				</ul>
+			    <MemberSelectList ref="memberSelectList" />
+			</div>
+	}
+});

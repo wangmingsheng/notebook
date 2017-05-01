@@ -1,0 +1,122 @@
+var TaskHandle = require('../../handle/teamwork/Task');
+
+module.exports = React.createClass({
+	goto: function() {
+		Utils.setUrl('/selectmembers');
+		var ModuleManage = require('../Manage');
+		ModuleManage.getModule('selectmembers', function(Virtual) {
+			Event.trigger('SwitchModule', <Virtual/>);
+		});
+	},
+	componentDidMount: function() {
+		TaskHandle.getParticipate(function(result) {
+			if(result.code == 200) {
+				console.log(JSON.stringify(result));
+
+			}
+		})
+	},
+	getInitialState: function() {
+		return {source: {}};
+	},
+	render: function() {
+		return <div className="joined_task_page">
+				<div className="select_list short_line">
+					<h4 onClick={this.goto}>
+						<span>已过期</span>
+					</h4>
+					<ul>
+						<li>
+							<label className="check"><input type="checkbox" /><i></i></label>
+							<div className="text" onClick={this.goto}>
+								<div className="top_block">
+									<span className="text">针对每一次通话加入后处理时间</span>
+									<span className="tip">李磊 本周二</span>
+								</div>
+								<div className="bottom_block"><span className="brand">SmartCall</span></div>
+							</div>
+							<div className="option">
+								<input type="button" value="&#xe600;" /><input type="button" value="&#xe604;" />
+							</div>
+						</li>
+						<li>
+							<label className="check"><input type="checkbox" /><i></i></label>
+							<div className="text">
+								<div className="top_block">
+									<span className="text">如果关心某个同事的任务情况，可以把他添加到左侧的关注列表中</span>
+									<span className="tip">李磊 9月15日</span>
+								</div>
+								<div className="bottom_block"><span className="brand">SmartCall</span></div>
+							</div>
+							<div className="option">
+								<input type="button" value="&#xe600;" /><input type="button" value="&#xe604;" />
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div className="select_list easy">
+					<h4>
+						<span>SmartCall</span>
+					</h4>
+					<ul>
+						<li>
+							<label className="check"><input type="checkbox" /><i></i></label>
+							<div className="text">
+								<div className="top_block">
+									<span className="text">针对每一次通话加入后处理时间</span>
+									<span className="tip later">韩梅梅10月15日</span>
+								</div>
+							</div>
+							<div className="option">
+								<input type="button" value="&#xe600;" /><input type="button" value="&#xe604;" />
+							</div>
+						</li>
+						<li>
+							<label className="check"><input type="checkbox" /><i></i></label>
+							<div className="text">
+								<div className="top_block">
+									<span className="text">如果关心某个同事的任务情况</span>
+									<span></span>
+								</div>
+							</div>
+							<div className="option">
+								<input type="button" value="&#xe600;" /><input type="button" value="&#xe604;" />
+							</div>
+						</li>
+					</ul>
+				</div>
+				<div className="select_list easy">
+					<h4>
+						<span>SmartCall Helper</span>
+
+					</h4>
+					<ul>
+						<li>
+							<label className="check"><input type="checkbox" /><i></i></label>
+							<div className="text">
+								<div className="top_block">
+									<span className="text">针对每一次通话加入后处理时间</span>
+									<span></span>
+								</div>
+							</div>
+							<div className="option">
+								<input type="button" value="&#xe600;" /><input type="button" value="&#xe604;" />
+							</div>
+						</li>
+						<li>
+							<label className="check"><input type="checkbox" /><i></i></label>
+							<div className="text">
+								<div className="top_block">
+									<span className="text">如果关心某个同事的任务情况</span>
+									<span></span>
+								</div>
+							</div>
+							<div className="option">
+								<input type="button" value="&#xe600;" /><input type="button" value="&#xe604;" />
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+	}
+});

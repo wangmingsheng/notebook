@@ -1,0 +1,67 @@
+module.exports = React.createClass({
+	getDefaultProps: function() {
+		return {swipe: false, startML: 20};
+    },
+    touchStartEvent: function(e) {
+		if (Config.locked || e.changedTouches.length != 1) return false;
+		$(e.currentTarget).css('transition', null);
+        var finger = e.changedTouches[0];
+		this.state.point = {x: finger.screenX, y: finger.screenY};
+		this.state.isMoved = false;
+    },
+    touchMoveEvent: function(e) {
+		if (!this.state.point) return false;
+
+		var finger = e.changedTouches[0];
+		var diffX = this.state.point.x - finger.screenX;
+		var diffY = Math.abs(this.state.point.y - finger.screenY);
+
+		if(diffY > this.props.startML && !this.state.isMoved) return (this.state.point = null);
+		if(diffX <= this.props.startML) return false;
+
+		Utils.screenState(true);
+		this.state.isMoved = true;
+
+		var dom = $(e.currentTarget);
+		if (!this.state.open && diffX >= 0) {
+			if (diffX > this.state.scrollWidth) diffX = this.state.scrollWidth;
+			dom.css('left', -diffX);
+			return true;
+		}
+    },
+    touchEndEvent: function(e) {
+		if (!this.state.isMoved) return false;
+
+		var finger = e.changedTouches[0];
+		var diffX = this.state.point.x - finger.screenX;
+		this.state.point = null;
+
+		if (diffX > (this.state.scrollWidth / 4)) return this.out();
+		return this.back(true);
+    },
+    back: function(itTouch) {
+		if (!itTouch && !this.state.open) return true;
+        $(this.refs.moveLi).css({transition: 'left .2s', left: 0});
+        this.state.open = false;
+		Utils.screenState(false);
+    },
+    out: function() {
+        $(this.refs.moveLi).css({transition: 'left .2s', 'left': -this.state.scrollWidth});
+		this.state.open = true;
+		Utils.screenState(true);
+    },
+    componentDidMount:function() {
+		Event.on('ReleaseLock', this.back);
+    },
+    componentWillUnmount:function() {
+        Event.off('ReleaseLock', this.back);
+    },
+    getInitialState: function() {
+        return {point: null, open: false, scrollWidth: 140 * (parseInt($('html').css('font-size')) / 20), isMoved: false};
+    },
+    render: function() {
+        return <li ref="moveLi" onTouchStart={this.props.swipe && this.touchStartEvent} onTouchMove={this.props.swipe && this.touchMoveEvent} onTouchEnd={this.props.swipe && this.touchEndEvent}>
+					{this.props.children}
+				</li>;
+    }
+});

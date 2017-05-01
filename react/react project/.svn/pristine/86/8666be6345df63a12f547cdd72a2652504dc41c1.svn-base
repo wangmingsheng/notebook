@@ -1,0 +1,8 @@
+module.exports = React.createClass({
+    render: function() {
+        return (<label className="switch_button">
+            <input type="checkbox" onChange={this.props.onChange} value={this.props.value} disabled={this.props.disabled} checked={this.props.checked} defaultChecked={this.props.defaultChecked}/>
+            <i >{this.props.text}</i>
+        </label>);
+    }
+});

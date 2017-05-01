@@ -1,0 +1,259 @@
+@import "media.css";
+@import "base.css";
+.normal_icon {
+  font-family: "normal_icon" !important;
+  font-size: 0.9rem;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+/*我的任务*/
+.wrap>.mytask_page>div {
+  width: 100%;
+}
+.wrap>.mytask_page>div>h4 {
+  width: 100%;
+  height: 1.5rem;
+  overflow: hidden;
+  text-indent: 18px;
+}
+.wrap>.mytask_page>div>h4>span {
+  color: #9d9d9f;
+  line-height: 1.5rem;
+}
+.wrap>.mytask_page>div>ul {
+  position: relative;
+  width: 100%;
+  background-color: #fff;
+  overflow: hidden;
+}
+.wrap>.mytask_page>div>ul>li {
+  position: relative;
+  width: 25.75rem;
+}
+.wrap>.mytask_page>div>ul>li::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 25.75rem;
+  border-bottom: 1px solid #efeff4;
+}
+.wrap>.mytask_page>div>ul>li>.check {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 2.3rem;
+}
+.wrap>.mytask_page>div>ul>li>.check>input {
+  display: none;
+}
+.wrap>.mytask_page>div>ul>li>.check>i {
+  display: inline-block;
+  width: 0.95rem;
+  height: 1rem;
+  margin-left: 0.9rem;
+  margin-top: 0.7rem;
+  border: 0.05rem solid #979797;
+  border-radius: 0.25rem;
+}
+.wrap>.mytask_page>div>ul>li>.check>input:checked+i:after {
+  content: '\e605';
+}
+.wrap>.mytask_page>div>ul>li>.text {
+  display: inline-block;
+  width: 16.45rem;
+  margin-left: 2.3rem;
+  margin-right: -0.5em;
+}
+.wrap>.mytask_page>div>ul>li>.text>label {
+  display: inline-block;
+  padding-top: 0.7rem;
+  padding-right: 1.1rem;
+  width: 100%;
+}
+.wrap>.mytask_page>div>ul>li>.text>label>.top_block {
+  display: block;
+  width: 100%;
+}
+.wrap>.mytask_page>div>ul>li>.text>label>.top_block>.text {
+  font-size: 0.7rem;
+  line-height: 1rem;
+  color: #474747;
+}
+.wrap>.mytask_page>div>ul>li>.text>label>.top_block>.tip {
+  display: inline-block;
+  height: 1rem;
+  padding: 0 0.6rem 0 0.6rem;
+  margin-left: 0.5rem;
+  line-height: 1.1rem;
+  border-radius: 0.5rem;
+  font-size: 0.6rem;
+  text-align: center;
+}
+.wrap>.mytask_page>div>ul>li>.text>label>.bottom_block {
+  display: block;
+  width: 100%;
+}
+.wrap>.mytask_page>div>ul>li>.text>label>.bottom_block>.logo {
+  font-size: 0.7rem;
+  line-height: 1.35rem;
+  color: #aaa;
+}
+.wrap>.mytask_page>div>ul>li>.option {
+  position: absolute;
+  left: 375px;
+  top: 0;
+  width: 7rem;
+  height: 100%;
+}
+.wrap>.mytask_page>div>ul>li>.option>input {
+  width: 3.5rem;
+  height: 100%;
+}
+.wrap>.mytask_page>div>ul>li>.option>input:nth-child(1):after {
+  content: '\e600';
+}
+.wrap>.mytask_page>div>ul>li>.option>input:nth-child(2):after {
+  content: '\e604';
+}
+/*新建任务*/
+.wrap>.newtask_page>ul {
+  width: 100%;
+  padding-left: 0.9rem;
+  margin-top: 1.05rem;
+  background-color: #fff;
+}
+.wrap>.newtask_page>ul>li {
+  width: 100%;
+  height: 2.5rem;
+}
+.wrap>.newtask_page>ul>li:not(:nth-child(1)) {
+  border-top: 1px solid #efeff4;
+}
+.wrap>.newtask_page>ul>li>input {
+  width: 100%;
+  height: 2.5rem;
+  font-size: 0.9rem;
+  color: #939298;
+}
+.wrap>.newtask_page>ul>li>input::-webkit-input-placeholder {
+  color: #939298;
+  font-size: 0.9rem;
+}
+.wrap>.newtask_page>ul>li>.option {
+  line-height: 2.45rem;
+  font-size: 0.9rem;
+}
+.wrap>.newtask_page>ul>li>.right_block {
+  float: right;
+  height: 100%;
+  padding-right: 0.85rem;
+}
+.wrap>.newtask_page>ul>li>.right_block>.icon {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.8rem;
+  margin: 0.85rem 0 0 0.85rem;
+  background: url("images/right_icon.png") no-repeat center;
+}
+.wrap>.newtask_page>ul>li>.right_block>.tip {
+  font-size: 0.7rem;
+  line-height: 2.5rem;
+  color: #a5a5a5;
+}
+.wrap>.newtask_page>ul>li>.right_block>input {
+  display: none;
+  overflow: hidden;
+}
+.wrap>.newtask_page>ul>li>.right_block>label {
+  position: relative;
+  display: inline-block;
+  width: 2.55rem;
+  height: 1.55rem;
+  margin-top: 0.5rem;
+}
+.wrap>.newtask_page>ul>li>.right_block>label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #1f75d2;
+  border-radius: 0.75rem;
+}
+.wrap>.newtask_page>ul>li>.right_block>input:checked+label::before {
+  background-color: #efeff4;
+}
+.wrap>.newtask_page>ul>li>.right_block>label::after {
+  content: '';
+  position: absolute;
+  width: 1.4rem;
+  height: 1.4rem;
+  top: 2px;
+  right: 2px;
+  border-radius: 100%;
+  background-color: #fff;
+}
+.wrap>.newtask_page>ul>li>.right_block>input:checked+label::after {
+  right: 20px;
+  background-color: #1f75d2;
+}
+/*增加项目成员*/
+.wrap>.add_member_page {
+  font-size: 0.9rem;
+  color: #373737;
+  overflow: hidden;
+}
+.wrap>.add_member_page>.search_box {
+  width: 100%;
+  height: 2.25rem;
+  padding: 0.4rem;
+}
+.wrap>.add_member_page>.search_box>li {
+  width: 100%;
+  height: 100%;
+}
+.wrap>.add_member_page>.search_box>li>input {
+  width: 100%;
+  height: 100%;
+  border: 0.05rem solid transparent;
+  border-radius: 0.25rem;
+  text-align: center;
+  color: #929297;
+}
+.wrap>.add_member_page>.team_member_list {
+  width: 100%;
+  background-color: #fff;
+}
+.wrap>.add_member_page>.team_member_list>li {
+  position: relative;
+  width: 100%;
+  height: 3rem;
+}
+.wrap>.add_member_page>.team_member_list>li:after {
+  content: '';
+  position: absolute;
+  top: 18px;
+  right: 15px;
+  width: 0.8rem;
+  height: 0.6rem;
+}
+.wrap>.add_member_page>.team_member_list>li>.avatar {
+  display: inline-block;
+  width: 3.7rem;
+  height: 100%;
+  padding: 0.4rem;
+  vertical-align: top;
+  text-align: center;
+}
+.wrap>.add_member_page>.team_member_list>li>.member_name {
+  display: inline-block;
+  height: 100%;
+}
+.wrap>.add_member_page>.team_member_list>li>.member_name>span {
+  line-height: 3rem;
+}

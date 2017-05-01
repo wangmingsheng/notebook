@@ -1,0 +1,25 @@
+module.exports = React.createClass({
+    getInitialState: function() {
+        var _className = ['checkbox'];
+        if (this.props.className) {
+            _className.push(this.props.className);
+        }
+        switch(this.props.type){
+            case 'radio':
+                _className.push('checkbox_radio');
+                break;
+        }
+
+        return {className: _className.join(' ')}
+    },
+    render: function() {
+        return (
+            <div className={this.state.className}>
+                <label >
+                <input type="checkbox" onChange={this.props.onChange} value={this.props.value} disabled={this.props.disabled} checked={this.props.checked} defaultChecked={this.props.defaultChecked}/>
+                <i></i>
+                </label>
+                <span>{this.props.text}</span>
+            </div>);
+    }
+});

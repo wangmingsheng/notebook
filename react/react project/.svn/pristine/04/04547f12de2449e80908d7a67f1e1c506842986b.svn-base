@@ -1,0 +1,44 @@
+var DataFactory = require('./DataFactory');
+var TaskHandle = require('../handle/teamwork/Task');
+
+function ProjectData() {}
+
+ProjectData.prototype = Object.create(new DataFactory, {
+	updateSource: {
+		value: function(data, callback) {
+			var items = {};
+			for (var i = 0; i < data.length; i++) {
+				items[data[i]._id] = data[i];
+			}
+			this.list = data;
+			this.source = items;
+			typeof(callback) == 'function' && callback();
+		}
+	},
+	getSource: {
+		value: function(callback) {
+			var data = Interface.getProject();
+			if(data) return this.updateSource.call(this, data, callback)
+
+			TaskHandle.getProjectList(function(result) {
+				if(result.code == 200) {
+					data = result.data;
+					this.updateSource.call(this, data, callback)
+				}
+			}.bind(this));
+		}
+	},
+	getEntryNameById: {
+		value: function(projectId, entryId) {
+			var name = '';
+			this.source[projectId].entrys.forEach(function(item) {
+				if(item._id == entryId) name = item.name;
+			});
+			return name;
+		}
+	}
+});
+
+ProjectData.prototype.constructor = ProjectData;
+
+module.exports = new ProjectData

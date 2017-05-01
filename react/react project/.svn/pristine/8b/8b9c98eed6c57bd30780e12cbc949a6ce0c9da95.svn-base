@@ -1,0 +1,139 @@
+var SelectList = require('../../components/SelectList');
+var SwipeLi = require('../../components/SwipeLi');
+var TaskHandle = require('../../handle/teamwork/Task');
+
+var textData =[
+	[
+		{ text: '针对每一次通话加入后处理时间', tip: '10月15日', brand: 'SmartCall'},
+		{ text: '如果关心某个同事的任务情况，可以把他添加到左侧的关注列表中', tip: '', brand: 'SmartCall'}
+	],
+	[
+		{ text: '针对每一次通话加入后处理时间', tip: '本周二', brand: 'SmartCall'},
+		{ text: '如果关心某个同事的任务情况，可以把他添加到左侧的关注列表中', tip: '', brand: 'SmartCall Helper'}
+	],
+	[
+		{ text: '图表中的数据导出', tip: '', brand: 'SmartCall'},
+		{ text: '统计图标/工单', tip: '', brand: 'SmartCall Helper'}
+	]
+];
+module.exports = React.createClass({
+	goto: function() {
+		var Module = require('./Module2');
+		Event.trigger('SwitchModule', <Module />);
+	},
+	run: function() {
+		var data = {
+			title: 'asa',
+			list: [
+				{
+					text: '测试1', event: function() {
+				}
+				},
+				{
+					text: '测试2', event: function() {
+				}
+				}
+			]
+		}
+		// Interface.alert(data);
+	},
+	sheet: function() {
+		var data = [
+			{
+				text: '新建任务', event: function() { /*跳到新建任务模块 */
+			}
+			},
+			{
+				text: '新建任务列表', event: function() {
+			}
+			},
+			{
+				text: '删除', evnet: function() {
+			}, color: '1'
+			}
+		];
+		Interface.sheet(data);
+	},
+	componentDidMount: function() {
+		TaskHandle.getProjectList(function(result) {
+			// alert(JSON.stringify(result));
+		});		
+	},
+	getInitialState: function() {
+		var list = [{
+			text: '新建任务', event: function() { /* 新建任务的工作*/
+			}
+		}, {
+			text: '新建任务列表', event: function() {
+				// alert('新建任务列表');
+			}
+		}];
+		var headObject = {title: '文档内容', back: '后退', operat: {text: '+', list: list}};
+		Interface.setHeader(headObject);
+		return {};
+	},
+	render: function() {
+		return (<div className="mytask_page wrap">
+			 <SelectList title="任务池">
+				 {
+				 	textData[0].map(function(el, index) {
+						return  <SwipeLi key={index}>
+							<label className="check"><input type="checkbox" /><i></i></label>
+							<div className="text">
+								<div className="top_block">
+									<span className="text">{el.text}</span><span className={el.tip==''?'':'tip'}>{el.tip}</span>
+								</div>
+								<div className="bottom_block">
+									<span className="brand">{el.brand}</span>
+								</div>
+							</div>
+							<div className="option">
+								<input type="button" value="&#xe600;" /><input type="button" value="&#xe604;" />
+							</div>
+						</SwipeLi>
+					}.bind(this))
+				 }
+			 </SelectList>
+			 <SelectList data={textData[1]} title="今天">
+				 {
+					 textData[1].map(function(el, index) {
+						 return  <SwipeLi key={index}>
+								 <label className="check"><input type="checkbox" /><i></i></label>
+								 <div className="text">
+									 <div className="top_block">
+										 <span className="text">{el.text}</span><span className={el.tip==''?'':'tip'}>{el.tip}</span>
+									 </div>
+									 <div className="bottom_block">
+										 <span className="brand">{el.brand}</span>
+									 </div>
+								 </div>
+								 <div className="option">
+									 <input type="button" value="&#xe600;" /><input type="button" value="&#xe604;" />
+								 </div>
+						 </SwipeLi>
+					 }.bind(this))
+				 }
+			 </SelectList>
+			 <SelectList data={textData[2]} title="接下来">
+				 {
+					 textData[2].map(function(el, index) {
+						 return  <SwipeLi key={index}>
+							 <label className="check"><input type="checkbox" /><i></i></label>
+							 <div className="text">
+								 <div className="top_block">
+									 <span className="text">{el.text}</span><span className={el.tip==''?'':'tip'}>{el.tip}</span>
+								 </div>
+								 <div className="bottom_block">
+									 <span className="brand">{el.brand}</span>
+								 </div>
+							 </div>
+							 <div className="option">
+								 <input type="button" value="&#xe600;" /><input type="button" value="&#xe604;" />
+							 </div>
+						 </SwipeLi>
+					 }.bind(this))
+				 }
+			 </SelectList>
+		</div>);
+	}
+});

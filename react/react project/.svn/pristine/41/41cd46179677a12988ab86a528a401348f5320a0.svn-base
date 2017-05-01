@@ -1,0 +1,26 @@
+var Module2 = require('./task/Module2');
+var Module3 = require('./task/Module3');
+var Module4 = require('./task/Module4');
+var Module5 = require('./task/Module5');
+
+module.exports = {
+	getModule: function(type, callback) {
+		type = type.replace('/', '')
+		switch (type.toLowerCase()) {
+			case 'module2': 
+				callback(Module2);
+			break;
+			case 'module3': 
+				callback(Module3);
+			break;
+			case 'module4': 
+				callback(Module4);
+			break;
+			case 'module5': 
+				callback(Module5);
+			break;
+			default :
+				callback(require('./task/Index'));
+		}
+	}
+}

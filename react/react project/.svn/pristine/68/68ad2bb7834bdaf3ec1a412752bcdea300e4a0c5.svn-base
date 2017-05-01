@@ -1,0 +1,63 @@
+module.exports = React.createClass({
+	goto: function() {
+		Utils.setUrl('/module4');
+		var ModuleManage = require('../Manage');
+		ModuleManage.getModule('module4', function(Virtual) {
+			Event.trigger('SwitchModule', <Virtual/>);
+		});
+	},
+	getInitialState: function() {
+		return {};
+	},
+	render: function() {
+		return <div className="default_project_page">
+				<div className="tab_box">
+					<ul>
+						<li><label htmlFor="mytask">任务</label></li>
+						<li className="bkg"><label htmlFor="member">成员</label></li>
+						<li><label htmlFor="">统计</label></li>
+					</ul>
+				</div>
+				<div>
+					<input type="radio" id="member" name="tab_page" />
+					<ul className="team_member_list">
+						<li className="check" onClick={this.props.callBack}>
+							<div className="avatar"><img src="./images/avatar.png" alt="" /></div><div className="member_name"><span>陈美美</span></div>
+						</li>
+						<li>
+							<div className="avatar"><img src="./images/avatar.png" alt="" /></div><div className="member_name"><span>李磊</span></div>
+						</li>
+						<li>
+							<div className="avatar"><img src="./images/avatar.png" alt="" /></div><div className="member_name"><span>唐中华</span></div>
+						</li>
+					</ul>
+				</div>
+				<div>
+					<div className="select_list easy round">
+						<input type="radio" id="mytask" name="tab_page"/>
+						<h4><span>任务列表</span></h4>
+						<ul className="task_list">
+							<li onClick={this.goto}>
+								<label className="check"><input type="checkbox" /><i></i></label>
+								<div className="text">
+									<div className="top_block">
+										<span className="text">针对每一次通话加入后处理时间</span>
+										<span className="tip later">韩梅梅10月15日</span>
+									</div>
+								</div>
+							</li>
+							<li>
+								<label className="check"><input type="checkbox" /><i></i></label>
+								<div className="text">
+									<div className="top_block">
+										<span className="text">如果可以关心某个同事的任务情况</span><span></span>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+	}
+});

@@ -1,0 +1,12 @@
+module.exports = React.createClass({
+    render: function() {
+        return <div className="select_list">
+					<h4>
+						<span>{this.props.title}</span>
+					</h4>
+					<ul>
+						{this.props.children}
+					</ul>
+				</div>
+    }
+});

@@ -1,0 +1,22 @@
+
+module.exports = React.createClass({
+    getDefaultProps: function() {
+      return {icon: true}
+    },
+    shouldComponentUpdate: function(nextProps, nextState) {
+        return this.props != nextProps;
+    },
+    render: function() {
+        return 	<li onClick={this.props.onClick} className="jump_option_item">
+                <span className="title">{this.props.title}</span>
+            <div className="right_block">
+                <span className="tip">
+                    {this.props.children}
+                </span>
+                {
+                    !this.props.icon ? null : <i className="icon">&#xe606;</i>
+                }
+            </div>
+        </li>
+    }
+});

@@ -1,0 +1,224 @@
+var CheckBox = require('../../components/CheckBox');
+var PushUpDialog = require('../../components/PushUpDialog');
+var AcrossMbShow = require('../../components/AcrossMbShow');
+var MulMember = require('./MulMember');
+var Discuss = require('./Discuss');
+var Member = require('../../components/Member');
+var ProjectData = require('../../data/Project');
+var MemberData = require('../../data/Member');
+
+var TaskHandle = require('../../handle/teamwork/Task');
+
+module.exports = React.createClass({
+
+	sheet: function() {
+		var data = [
+			{text: '移动', event: function() { this.run(); }.bind(this)},
+			{text: '归档', event: function() { this.run(); }.bind(this)},
+			{text: '删除', event: function() { this.run(); }.bind(this), color: 1}
+			];
+		Interface.sheet(data);
+	},
+	setHeader: function() {
+		var headObject = {title: '任务详情', back: {text: '后退'}, operat: {text: '...', event: this.sheet}};
+		Interface.setHeader(headObject);
+	},
+	pushDialog: function(type, data) {
+		switch(type) {
+			case 1:
+				this.state.selectDialog = 1;
+				break;
+			case 2:
+				data && (this.state.source.following_ids = this.transHaXiToStr(data));
+				this.state.selectDialog = false;
+				this.setHeader();
+				break;
+			case 3:
+				this.state.selectDialog = 3;
+				break;
+			case 4:
+				if(!data) 	{
+					this.state.selectDialog = false;
+					this.setHeader();
+					break;
+				}
+
+				var assign = this.transHaXiToStr(data);
+				var param = {assign: assign};
+				TaskHandle.modify(this.state.source._id, param, function(result) {
+					if(result.code == 200) {
+						this.state.selectDialog = false;
+						this.state.source.assign = assign;
+						this.setHeader();
+						this.setState(this.state);
+					}
+				}.bind(this));
+				break;
+		}
+		this.setState(this.state);
+	},
+	transHaXiToStr: function(obj) {
+		var arr = [];
+		for(var i in obj) {
+			if(obj[i]) arr.push(i);
+		}
+		return arr.join(',');
+	},
+	transStrToHaXi: function(strData) {
+		if(typeof(strData) != 'string') return {};
+		var arr = strData.split(',');
+		var result = {};
+		arr.forEach(function(item) {
+			if(!item) return false;
+			result[item] = true;
+		});
+		return result;
+	},
+	isEmpty: function(obj) {
+		for(var i in obj) {
+			return false;
+		}
+		return true;
+	},
+	taskToggle: function(ev) {
+		if (ev.currentTarget.checked) {
+			return TaskHandle.complete(this.state.source._id, function(result) {
+				if(result.code == 200) {
+					this.state.source.is_completed = 1;
+					this.setState(this.state);
+				}
+			}.bind(this));
+		}
+
+		TaskHandle.uncomplete(this.state.source._id, function(result) {
+			if(result.code == 200) {
+				this.state.source.is_completed = 0;
+				this.setState(this.state);
+			}
+		}.bind(this));
+	},
+	subTodoToggle: function(item, ev) {
+		if (ev.currentTarget.checked) {
+			return TaskHandle.completeSubtodo(this.state.source._id, item._id, function(result) {
+				if(result.code == 200) {
+					item.complete = 1;
+					this.setState(this.state);
+				}
+			}.bind(this));
+		}
+
+		TaskHandle.uncompleteSubtodo(this.state.source._id, item._id, function(result) {
+			if(result.code == 200) {
+				item.complete = 0;
+				this.setState(this.state);
+			}
+		}.bind(this));
+	},
+	dateChange: function(e) {
+		this.state.source.defaultTime = e.currentTarget.value;
+		this.setState(this.state);
+	},
+	selectDate: function(ev) {
+		$(ev.currentTarget).find('input').focus();
+		this.state.source.defaultTime = Utils.formatDate(this.state.source.deadline, 'YYYY-MM-DDTHH:mm');
+		if(!this.state.source.deadline) {
+			this.state.source.defaultTime = Utils.formatDate((new Date()).getTime() / 1000 - Config.timeCut, 'YYYY-MM-DD') + 'T00' + ':00';
+		}
+		this.setState(this.state);
+	},
+	setDeadlineDate: function(e) {
+		var deadline = parseInt(Date.parse(e.currentTarget.value) / 1000 - Config.timeCut);
+		TaskHandle.modify(this.state.source._id, {deadline: deadline}, function(result) {
+			if(result.code == 200) {
+				this.state.source.deadline = deadline;
+				this.setState(this.state);
+			}
+		}.bind(this));
+	},
+	componentDidMount: function() {
+		TaskHandle.getOne(this.props.data.taskId, function(result) {
+			if(result.code == 200) {
+				this.setState({source: result.data || {}});
+			}
+		}.bind(this));
+	},
+	getInitialState: function() {
+		this.setHeader();
+		return {source: {}, selectDialog: false};
+	},
+	render: function() {
+		if(Object.keys(this.state.source).length == 0 ) return false;
+
+		return	(
+			<div className="task_detail">
+				<h4>
+					<span>{ProjectData.source[ProjectData.currentId].name + '-' + this.props.data.tasklistName}</span>
+					<i className="iconfont">&#xe606;</i>
+				</h4>
+				<div className="bk_wr">
+					<div className="check_box">
+						<div className="check">
+							<CheckBox onChange={this.taskToggle} checked={!!this.state.source.is_completed}/>
+						</div>
+						<div className="text">
+							<p>{this.state.source.title}</p>
+							<ul>
+								<li>
+									<div onClick={this.pushDialog.bind(this, 3)}>
+										<i>&#xe602;</i>
+										<label>{this.state.source.assign && MemberData.source[this.state.source.assign].display_name}</label>
+									</div>
+									<div className="date_block" onClick={this.selectDate}>
+										<input type="datetime-local" value={this.state.source.defaultTime} onBlur={this.setDeadlineDate} onChange={this.dateChange} />
+										<i>&#xe603;</i>
+										<label>{!this.state.source.deadline ? null : Utils.formatDate(this.state.source.deadline, 'YYYY年MM月DD日')}</label>
+										<label>{!this.state.source.deadline ? null : Utils.formatDate(this.state.source.deadline, 'HH:mm')}</label>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div className="description">
+						<h5>任务描述</h5>
+						<p className="detail">{this.state.source.desc.replace(/<(\/)?p>/g, '')}</p>
+					</div>
+					<div className="censor">
+						<h5>检查项</h5>
+						<ul>
+							{
+								this.state.source.subtodo &&
+								this.state.source.subtodo.map(function(item, index) {
+									return <li key={index}><CheckBox type="radio" text={item.title} onChange={this.subTodoToggle.bind(this, item)} checked={!!item.complete} /></li>
+								}.bind(this))
+							}
+						</ul>
+					</div>
+					<ul className="jump_option_list">
+						<li onClick={this.pushDialog.bind(this, 1)}>
+							<div className="option">
+								<span>参与者</span>
+							</div>
+							<div className="right_block"><span className="tip"><AcrossMbShow data={this.transStrToHaXi(this.state.source.following_ids)} /></span><i className="icon">&#xe606;</i></div>
+						</li>
+						<li>
+							<div className="option">
+								<span>附件</span>
+							</div>
+							<div className="right_block"><span className="tip"></span><i className="icon">&#xe606;</i></div>
+						</li>
+					</ul>
+					<div className="chat_box">
+						<Discuss topicId={this.state.source.topic} />
+					</div>
+				</div>
+				<PushUpDialog position={this.state.selectDialog ==1 }>
+				   <MulMember taskId={this.props.data.taskId} selected={this.transStrToHaXi(this.state.source.following_ids)} position={this.state.selectDialog == 1} callBack={this.pushDialog.bind(this, 2)}/>
+			    </PushUpDialog>
+				<PushUpDialog position={this.state.selectDialog ==3 }>
+					<Member taskId={this.props.data.taskId} selected={this.transStrToHaXi(this.state.source.assign)} position={this.state.selectDialog == 3} callBack={this.pushDialog.bind(this, 4)}/>
+				</PushUpDialog>
+			</div>);
+	}
+});
+
+

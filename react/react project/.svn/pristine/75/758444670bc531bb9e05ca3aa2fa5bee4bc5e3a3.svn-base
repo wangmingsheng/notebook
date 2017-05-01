@@ -1,0 +1,12 @@
+module.exports = {
+	setUrl: function(href) {
+		if (href.replace(location.origin, '') != location.href.replace(location.origin, '')) {
+			history.pushState(null, null, href);
+			return true;
+		}
+		return false;
+	},
+	toggleModule: function() {
+		
+	}
+};

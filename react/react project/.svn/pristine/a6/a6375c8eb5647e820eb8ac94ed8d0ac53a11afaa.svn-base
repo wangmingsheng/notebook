@@ -1,0 +1,64 @@
+module.exports = React.createClass({
+	getDefaultProps: function() {
+		return {swipe: false};
+    },
+    touchStartEvent: function(e) {
+		if (Config.locked || e.changedTouches.length != 1) return false;
+		$(e.currentTarget).css('transition', null);
+        var finger = e.changedTouches[0];
+		this.state.point = {x: finger.screenX};
+    },
+    touchMoveEvent: function(e) {
+		if (!this.state.point) return false;
+		Utils.screenState(true);
+
+		var finger = e.changedTouches[0];
+		var touch = this.state;
+
+		var diffX = this.state.point.x - finger.screenX;
+		var dom = $(e.currentTarget);
+
+		if (!this.state.open && diffX >= 0) {
+			if (diffX > this.state.scrollWidth) diffX = this.state.scrollWidth;
+			dom.css('left', -diffX);
+			return true;
+		}
+    },
+    touchEndEvent: function(e) {
+		if (!this.state.point) return false;
+		var finger = e.changedTouches[0];
+
+		if (this.state.point.x - finger.screenX > (this.state.scrollWidth / 4)) {
+			this.state.point = null;
+			return this.out();
+		}
+
+		this.state.point = null;
+		return this.back(true);
+    },
+    back: function(itTouch) {
+		if (!itTouch && !this.state.open) return true;
+        $(this.refs.moveLi).css({transition: 'left .2s', left: 0});
+        this.state.open = false;
+		Utils.screenState(false);
+    },
+    out: function() {
+        $(this.refs.moveLi).css({transition: 'left .2s', 'left': -this.state.scrollWidth});
+		this.state.open = true;
+		Utils.screenState(true);
+    },
+    componentDidMount:function() {
+		Event.on('ReleaseLock', this.back);
+    },
+    componentWillUnmount:function() {
+        Event.off('ReleaseLock', this.back);
+    },
+    getInitialState: function() {
+        return {point: null, open: false, scrollWidth: 140 * (parseInt($('html').css('font-size')) / 20)};
+    },
+    render: function() {
+        return <li ref="moveLi" onTouchStart={this.props.swipe && this.touchStartEvent} onTouchMove={this.props.swipe && this.touchMoveEvent} onTouchEnd={this.props.swipe && this.touchEndEvent}>
+					{this.props.children}
+				</li>;
+    }
+});

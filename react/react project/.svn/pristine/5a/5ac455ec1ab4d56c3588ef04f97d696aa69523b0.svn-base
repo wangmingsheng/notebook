@@ -1,0 +1,149 @@
+var CheckBox = require('../../components/CheckBox');
+var ProjectData = require('../../data/Project');
+var MemberData = require('../../data/Member');
+
+module.exports = React.createClass({
+	sheet: function() {
+		var data = [
+			{text: '移动', event: function() { this.run(); }.bind(this)},
+			{text: '归档', event: function() { this.run(); }.bind(this)},
+			{text: '删除', event: function() { this.run(); }.bind(this), color: 1}
+			];
+		Interface.sheet(data);
+	},
+	setHeader: function() {
+		var headObject = {title: '任务详情', back: {text: '后退'}, operat: {text: '...', event: this.sheet}};
+		Interface.setHeader(headObject);
+	},
+	getInitialState: function() {
+		this.setHeader();
+		return {source: this.props.data || {}};
+	},
+	render: function() {
+		return	(
+			<div className="task_detail">
+				<h4>
+					<span>{ProjectData.source[ProjectData.currentId].name}</span>
+					<i className="iconfont">&#xe606;</i>
+				</h4>
+				<div>
+					<div className="check_box">
+						<div className="check">
+							<CheckBox />
+						</div>
+						<div className="text">
+							<p>{this.state.source.title}</p>
+							<ul>
+								<li>
+									<div>
+										<i className="iconfont">&#xe602;</i>
+										<label>{MemberData.getCollect(this.state.source.assign)}</label>
+									</div>
+									<div>
+										<i className="iconfont">&#xe603;</i>
+										<label>2016年10月20日{Utils.formatDate(this.state.source.deadline, 'YYYY年MM月DD日')}</label>
+										<label>10:30 {Utils.formatDate(this.state.source.deadline, 'HH:mm')}</label>
+										<input type="data" />
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div className="description">
+						<h5>任务描述</h5>
+						<p className="detail">{this.state.source.desc}</p>
+					</div>
+					<div className="censor">
+						<h5>检查项</h5>
+						<ul>
+							<li>
+								<CheckBox type="radio" text="需求分析" />
+							</li>
+						</ul>
+					</div>
+					<ul className="task_detail_list">
+						<li>
+							<span className="title">参与者</span>
+							<i className="arrow iconfont">&#xe606;</i>
+							<ul>
+								<li><i className="avatar"><img src="../../../assets/images/member1.png" /></i></li>
+								<li><i className="avatar"><img src="../../../assets/images/member2.png" /></i></li>
+								<li><i className="avatar"><img src="../../../assets/images/member3.png" /></i></li>
+							</ul>
+						</li>
+						<li>
+							<span className="title">附件</span>
+							<i className="arrow iconfont">&#xe606;</i>
+						</li>
+					</ul>
+					
+					<div className="chat">
+						<ul>
+							<li>
+								<i className="avatar"><img src="../../../assets/images/member1.png" /></i>
+								<div className="content">
+									<div className="owner_info">
+										<span>Sunny</span>
+										<label>2016年9月18日</label>
+										<label>18:30</label>
+									</div>
+									<p>创建群组</p>
+								</div>
+							</li>
+							<li>
+								<i className="avatar"><img src="../../../assets/images/member1.png" /></i>
+								<div className="content">
+									<div className="owner_info">
+										<span>Sunny</span>
+										<label>2016年9月18日</label>
+										<label>18:30</label>
+									</div>
+									<div className="voice">	
+										<div className="tag" style={{width: 40 + "%"}}>
+										 	<div className="arrow">
+											    <em></em>
+											    <span></span>
+										   	</div>
+										   	<i>&gt;&gt;</i>
+										   	<span className="duration">15</span>
+									   	</div>									   	
+									</div>
+								</div>
+							</li>
+							<li>
+								<i className="avatar"><img src="../../../assets/images/member1.png" /></i>
+								<div className="content first_login others">
+									<div className="owner_info">
+										<span>Andy</span>
+										<label>18:30</label>
+									</div>
+									<strong>欢迎您使用Facework</strong>
+									<div className="voice">	
+										<div className="tag" style={{width: 20 + "%"}}>
+										 	<div className="arrow">
+											     <em></em>
+											     <span></span>
+										   	 </div>
+										   	 <i>&gt;&gt;</i>
+										   	 <span className="duration">15</span>
+									   	 </div>									   	 
+									</div>
+								</div>
+							</li>
+							<li>
+								<i className="avatar"><img src="../../../assets/images/member2.png" /></i>
+								<div className="content">
+									<div className="owner_info">
+										<span>Sunny</span>
+										<label>2016年9月18日</label>
+										<label>18:30</label>
+									</div>
+									<p>Welcome to the community documentation wiki for</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>);
+	}
+});

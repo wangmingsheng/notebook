@@ -1,0 +1,101 @@
+var SwipeLi = React.createClass({
+    touchObject: null,
+    touchStartEvent: function(e) {
+        if(Config.locked) return false;
+        $(e.currentTarget).css('transition', 'left 0s');
+        var touch = e.changedTouches[0];
+        this.touchObject.startPosition = {
+            x: touch.pageX,
+            y: touch.pageY
+        };
+        this.touchObject.startFlag = 1;
+        this.touchObject.deltaX = 0;
+    },
+    touchMoveEvent: function(e) {
+        if(this.touchObject.startFlag == 0) return false;
+        this.locked();
+        var touch = e.changedTouches[0];
+        var dom = e.currentTarget;
+        var length  = this.touchObject.length;
+        var startPosition = this.touchObject.startPosition;
+        var endPosition = this.touchObject.endPosition = {
+            x: touch.pageX,
+            y: touch.pageY
+        };
+
+        var deltaX = this.touchObject.deltaX = endPosition.x - startPosition.x;
+        if(deltaX > 0 && this.touchObject.startState == 1) {
+            if(deltaX > length) return false;
+            $(dom).css('left', deltaX - length + 'px');
+        }
+
+        if(deltaX < 0 && this.touchObject.startState == 0) {
+            if(deltaX < -length) return false;
+            $(dom).css('left', deltaX + 'px');
+        }
+    },
+    touchEndEvent: function() {
+        if(this.touchObject.startFlag == 0) return false;
+        var deltaX = this.touchObject.deltaX;
+        var length  = this.touchObject.length;
+
+        if(deltaX < 0) {
+            if(this.touchObject.startState == 0) {
+                if(Math.abs(deltaX) > 0.3*length) this.out();
+                if(Math.abs(deltaX) <= 0.3*length) this.back();
+            } else {
+                this.out();
+            }
+        }
+
+        if (deltaX > 0) {
+            if(this.touchObject.startState == 1) {
+                if(Math.abs(deltaX) > 0.3*length) this.back();
+                if(Math.abs(deltaX) <= 0.3*length) this.out();
+            } else {
+                this.back();
+            }
+        }
+
+    },
+    back: function() {
+        $(this.refs.moveLi).css({'transition': 'left .2s', 'left': 0});
+        this.touchObject.startFlag = 0;
+        this.touchObject.startState = 0;
+        this.unlock();
+    },
+    out: function() {
+        $(this.refs.moveLi).css({'transition': 'left .2s', 'left': -this.touchObject.length});
+        this.touchObject.startFlag = 0;
+        this.touchObject.startState = 1;
+        this.locked();
+    },
+    unlock: function() {
+        Config.locked = false;
+    },
+    locked: function() {
+        Config.locked = true;
+    },
+    release: function() {
+        Config.locked = false;
+        this.back();
+    },
+    componentDidMount:function() {
+        Event.on('ReleaseLock', this.release);
+    },
+    componentWillUnmount:function() {
+        Event.off('ReleaseLock', this.release);
+    },
+    getInitialState: function() {
+        this.touchObject = {startPosition: {}, endPosition: {}, deltaX: 0, length: 140 * (parseInt($('html').css('font-size')) / 20), startState: 0, startFlag: 0};
+        return {};
+    },
+    render: function() {
+
+        return <li ref="moveLi" onTouchStart={this.touchStartEvent} onTouchMove={this.touchMoveEvent} onTouchEnd={this.touchEndEvent}>
+            {this.props.children}
+        </li>
+    }
+});
+
+module.exports = SwipeLi;

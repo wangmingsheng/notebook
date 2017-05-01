@@ -1,0 +1,115 @@
+var SwitchBox = require('../../../components/SwitchBox');
+var PushUpDialog = require('../../../components/PushUpDialog');
+var AcrossMbShow = require('../../../components/AcrossMbShow');
+var SwipeLi = require('../../../components/SwipeLi');
+var TaskHandle = require('../../../handle/teamwork/Task');
+var MemberData = require('../../../data/Member');
+
+module.exports = React.createClass({
+    upLoadStart: function() {
+        Interface.uploadAttachment({ref_id: this.props.taskId, ref_type: 3});
+    },
+    setHeader: function(text) {
+        var headObject = {title: '附件', back: {text: '返回', event: this.props.callBack}, operat: {text: '上传', event: this.upLoadStart}};
+        if(text) {
+            headObject.operat.text = text;
+            headObject.back.event = headObject.operat.event = function() {};
+        }
+        Interface.setHeader(headObject);
+    },
+    dataRequest: function() {
+        var param = {
+            ref_id: this.props.taskId,
+            ref_type: 3,
+            limit: 21,
+            latest_stamp: 1
+        };
+        TaskHandle.getAttachments(param, function(result) {
+            if(!this.isMounted()) return null;
+            if(result.code == 200) {
+                this.state.loading = false;
+                this.state.source = result.data || [];
+                return this.setState(this.state, Interface.webEndRefresh);
+            }
+            Interface.webEndRefresh();
+        }.bind(this));
+        Interface.webEndRefresh();
+    },
+    deleteData: function(id, arr) {
+        for(var i = 0; i < arr.length; i++) {
+            if(item._id == id) {
+                arr.splice(index, 1);
+                return true;
+            }
+        }
+    },
+    delete: function(id) {
+        console.log(id);
+        TaskHandle.deleteAttachments(id, function(result) {
+            console.log(result);
+            if(result.code == 200) {
+                this.deleteData(id, this.state.source);
+                return this.setState(this.state);
+            }
+        }.bind(this))
+    },
+    upLoadFinish: function(result) {
+        this.state.source.push(result);
+        this.setState(this.state);
+    },
+    componentDidMount: function() {
+        Event.on('uploadAttachmentCallback', this.upLoadFinish);
+        Event.on('webBeginRefresh', this.dataRequest);
+        this.dataRequest();
+    },
+    componentWillUnmount: function() {
+        Event.off('uploadAttachmentCallback', this.upLoadFinish);
+        Event.off('webBeginRefresh', this.dataRequest);
+    },
+    componentWillReceiveProps: function(nProps) {
+        if(nProps.position) {
+            this.setHeader();
+        }
+    },
+    shouldComponentUpdate: function(nProps, nState) {
+        return this.state != nState;
+    },
+    getInitialState: function() {
+        if(this.props.position) this.setHeader();
+        return {source: [], loading: true};
+    },
+    render: function() {
+        if(this.state.loading) return null;
+        return <div className="task_attachment_page">
+            <div className="content_list">
+                <ul className="attachment">
+                    {
+                        this.state.source.map(function(item, index) {
+                            var title = item.title;
+                            console.log(item)
+                            if(title.length > 30) title = Utils.subStrSize(title, 0, 25) + '...' + Utils.subStrSize(title, -5);
+                            return <li key={index}>
+                                <ul>
+                                    <SwipeLi swipe={true} scrollCount={1}>
+                                        <div className="row_box">
+                                            <img src={"../../../assets/file_icons/" + item.ext + '.' +  item.ext} alt="图标"/>
+                                            <span className="text">
+                                                <div className="title">{title}</div>
+                                                <div className="tip">{MemberData.source[item.creator].display_name} 上传于{Utils.formatDate(item.created_time, 'YYYY年MM月DD日')}</div>
+                                            </span>
+                                        </div>
+                                    </SwipeLi>
+                                </ul>
+                                <a className="option" data-lock="ignore" href="javascript:;" onClick={this.delete.bind(this, item._id)}>删除</a>
+                            </li>
+                        }.bind(this))
+                    }
+                    {
+                        this.state.source.length != 0 ? null :
+                        <li className="warning">暂无任何附件信息</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+});

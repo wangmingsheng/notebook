@@ -1,0 +1,626 @@
+module.exports = {
+	// 获取任务信息
+	getMyTask: function(callback) {
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/task/oneself',
+			params: {tf: ''},
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 获取评论信息
+	getTaskComments: function(topicId, callback, params) {
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/topics/' + topicId + '/comments',
+			params: params || {tf: ''},
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 获取附件信息
+	getAttachments: function(params, callback) {
+		Forms.get({
+			api: Config.siteUrl.ATTACHMENT,
+			uri: '/teams/' + Config.elect_team + '/attachments',
+			params: params || {tf: ''},
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 删除附件信息
+	deleteAttachments: function(id, callback) {
+		Forms.get({
+			api: Config.siteUrl.ATTACHMENT,
+			uri: '/teams/' + Config.elect_team + '/attachments/relevance/' + id,
+			params: {tf: ''},
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 完成任务
+	complete: function(taskId, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/complete',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 取消完成任务
+	uncomplete: function(taskId, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/uncomplete',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 改变任务计划优先级
+	changePlan: function(taskId, params, callback){
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/plan',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 创建检查项
+	createSubtodo: function(subTodoData, callback) {
+		var params = {title: subTodoData.title};
+		Forms.post({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + subTodoData._id + '/subtodo',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 完成检查项
+	completeSubtodo: function(taskId, subtodoId, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/subtodos/' + subtodoId + '/complete',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 取消检查项
+	uncompleteSubtodo: function(taskId, subtodoId, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/subtodos/' + subtodoId + '/uncomplete',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 修改任务检查项
+	modifySubtodo: function(taskId, subtodoId, subtodoData, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/subtodo/' + subtodoId,
+			params: subtodoData,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 删除检查项
+	deleteSubtodo: function(taskId, subtodoId, callback) {
+		Forms.delete({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/subtodos/' + subtodoId,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 移动检查项
+	moveSubtodo: function(taskId, subtodoId, subtodoData, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/subtodos/' + subtodoId + '/move',
+			params: subtodoData,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 获取回收站任务
+	getTrash: function(callback) {
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/task/trash',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 恢复任务
+	restore: function(taskId, taskData, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/restore',
+			params: taskData,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 修改任务信息
+	modify: function(taskId, params, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId,
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 复制任务
+	clone: function(taskId, params, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/clone',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 删除任务至回收站
+	deleteToTrash: function(taskId, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/remove',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 删除任务
+	delete: function(taskId, callback) {
+		Forms.delete({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 设置任务参与人
+	setFollow: function(taskId, followData, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: "/teams/" + Config.elect_team + "/tasks/" + taskId + "/follow",
+			params: followData,
+			callback: function(result) {
+				if (typeof(callback) == "function") {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 删除任务参与人
+	removeFollow: function(taskId, removeData, callback) {
+		Forms.delete({
+			api: Config.siteUrl.TEAMWORK,
+			uri: "/teams/" + Config.elect_team + "/tasks/" + taskId + "/follow",
+			params: removeData,
+			callback: function(result) {
+				if (typeof(callback) == "function") {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 归档任务
+	archive: function(taskId, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/archive',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 发送消息任务
+	shareAttachment: function(taskId, taskData, callback) {
+		Forms.post({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/share/message',
+			params: taskData,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 设置处理优先级
+	setPriority: function(taskData, callback) {
+		var params = {priority: taskData.priority};
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskData._id + '/priority',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 获取我参与的任务
+	getParticipate: function(callback) {
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/task/following',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	getFollow: function(followId, callback) {
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/members/' + followId + '/tasks' ,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 获取项目信息
+	getProjectList: function(callback) {
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 获取单条任务
+	getOne: function(taskId, callback) {
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 获取单条项目
+	getOneProject: function(projectId, callback) {
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects/' + projectId,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 获取项目任务信息
+	getOneProjectTask: function(projectId, callback) {
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects/' + projectId + '/tasks',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 获取指定项目任务信息
+	getsPecific: function(projectData, callback) {
+		var filter = projectData.filter ? projectData.filter : '';
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks?ref_id=' + projectData._id + '&' + filter,
+			callback: function(result) {
+				typeof(callback) == 'function' && callback(result);
+			}
+		});
+	},
+	// 获得日历信息
+	getCalendar: function(params, callback) {
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/task/calendar',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 新建项目
+	createProject: function(params ,callback) {
+		Forms.post({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/project',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 获取归档项目
+	getArchiveProject: function(callback) {
+		Forms.get({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/project/archived',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 添加项目成员
+	addProjectMember: function(projectId, memberId, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects/' + projectId + '/invite',
+			params: {id: memberId},
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 修改项目信息
+	setProject: function(projectId, params, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects/' + projectId,
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 归档项目
+	archiveProject: function(projectId, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects/' + projectId + '/archive',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 恢复项目
+	restoreProject: function(projectId, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects/' + projectId + '/unarchive',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 删除项目
+	deleteProject: function(projectId, callback) {
+		Forms.delete({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects/' + projectId,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 退出项目
+	leaveProject: function(projectId, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects/' + projectId + '/leave',
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 新建任务
+	create: function(projectId, params, callback) {
+		Forms.post({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects/' + projectId + '/task',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 新建任务节点
+	createEntrys: function(projectId, params, callback) {
+		Forms.post({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects/' + projectId + '/entry',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 修改节点名
+	renameEntrys: function(entrysId, params, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/entrys/' + entrysId,
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 删除节点列表
+	deleteEntrys: function(entrysId, callback) {
+		Forms.delete({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/entrys/' + entrysId,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 归档接点完成任务
+	archiveEntrys: function(entrysId, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/entrys/' + entrysId + '/archive',
+			callback: function(result) {
+				typeof(callback) == 'function' && callback(result);
+			}
+		});
+	},
+	// 移动任务列表
+	moveEntrys: function(entrysId, params, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/entrys/' + entrysId + '/move',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 迁移任务
+	moveToProject: function(entrysId, params, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/entrys/' + entrysId + '/transfer',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 迁移任务到项目
+	moveToOther: function(taskId, params, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/transfer',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 移动任务
+	move: function(taskId, params, callback) {
+		Forms.put({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/tasks/' + taskId + '/move',
+			params: params,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	},
+	// 移除项目成员
+	moveProjectMember: function(projectId, memberId, callback) {
+		Forms.delete({
+			api: Config.siteUrl.TEAMWORK,
+			uri: '/teams/' + Config.elect_team + '/projects/' + projectId + '/members/' + memberId,
+			callback: function(result) {
+				if (typeof(callback) == 'function') {
+					callback(result);
+				}
+			}
+		});
+	}
+};

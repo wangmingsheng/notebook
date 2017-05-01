@@ -1,0 +1,77 @@
+
+var SwipeLi = React.createClass({
+    touchObject: {startPosition: {}, endPosition: {}, deltaX: 0, length: 140 * (parseInt($('html').css('font-size')) / 20), startState: 0},
+    touchStartEvent: function(e) {
+        $(e.currentTarget).css('transition', 'left 0s');
+        var touch = e.changedTouches[0];
+        var dom = e.currentTarget;
+        if(parseInt($(dom).css('left')) == 0) {
+            this.touchObject.startState = 0;
+            $(dom).css('left', 0);
+        } else {
+            this.touchObject.startState = 1;
+        }
+        this.touchObject.startPosition = {
+            x: touch.pageX,
+            y: touch.pageY
+        };
+        this.touchObject.deltaX = 0;
+    },
+    touchMoveEvent: function(e) {
+        var touch = e.changedTouches[0];
+        var dom = e.currentTarget;
+        var length  = this.touchObject.length;
+        var startPosition = this.touchObject.startPosition;
+        var endPosition = this.touchObject.endPosition = {
+            x: touch.pageX,
+            y: touch.pageY
+        };
+
+        var deltaX = this.touchObject.deltaX = endPosition.x - startPosition.x;
+        if(deltaX > 0 && this.touchObject.startState == 1) {
+            if(deltaX > length) return false;
+            $(dom).css('left', deltaX - length + 'px');
+        }
+
+        if(deltaX < 0 && this.touchObject.startState == 0) {
+            if(deltaX < -length) return false;
+            $(dom).css('left', deltaX + 'px');
+        }
+    },
+    touchEndEvent: function(e) {
+        var dom = e.currentTarget;
+        var deltaX = this.touchObject.deltaX;
+        var length  = this.touchObject.length;
+
+        $(e.currentTarget).css('transition', 'left .3s');
+        if(deltaX < 0 && this.touchObject.startState == 0) {
+            if(Math.abs(deltaX) > 0.3*length) $(dom).css('left', -length + 'px');
+            if(Math.abs(deltaX) <= 0.3*length) $(dom).css('left', 0+ 'px');
+        }
+
+        if (deltaX > 0 && this.touchObject.startState == 1) {
+            if(Math.abs(deltaX) > 0.3*length) $(dom).css('left', 0 + 'px');
+            if(Math.abs(deltaX) <= 0.3*length) $(dom).css('left', -length + 'px');
+        }
+
+        if(parseInt($(dom).css('left')) == 0) {
+            this.touchObject.startState = 0;
+        } else {
+            this.touchObject.startState = 1;
+        }
+
+    },
+    componentDidMount:function() {
+    },
+    getInitialState: function() {
+        return {};
+    },
+    render: function() {
+
+        return <li onTouchStart={this.touchStartEvent} onTouchMove={this.touchMoveEvent} onTouchEnd={this.touchEndEvent}>
+            {this.props.children}
+        </li>
+    }
+});
+
+module.exports = SwipeLi;

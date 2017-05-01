@@ -1,0 +1,63 @@
+var DataFactory = require('./DataFactory');
+
+function DepartmentData() {}
+
+DepartmentData.prototype =  Object.create(new DataFactory, {
+	/// 获取所有部门
+	getList: {
+		value: function(teamId, callback) {
+			var data = Interface.getDepartment();
+			if (data) {
+				var items = {};
+				for (var i = 0; i < data.length; i++) {
+					items[data[i]._id] = data[i];
+				}
+				this.source = items;
+				return true;
+			}
+			
+			var uri = '/teams/' + teamId + '/departments';
+			Forms.get({
+				uri: uri,
+				callback: function(e) {
+					if (e.code == 200) {
+						var data = e.data;
+						if (data) {
+							var items = {};
+							for (var i = 0; i < data.length; i++) {
+								items[data[i]._id] = data[i];
+							}
+							this.source = items;
+						}
+					}
+
+					if (typeof(callback) == 'function') {
+						callback();
+					}
+				}.bind(this)
+			});
+		}
+	},
+	/// 获取部门集合
+	getCollect: {
+		value: function() {
+			var _deptList = [{id: '', text: '全公司', order: -1}];
+			var _dataList = this.source || {};
+			var count = 1;
+			for (var i in _dataList) {
+				_deptList.push({key: count, id: _dataList[i]._id, text: _dataList[i].name, parentId: _dataList[i].parent, order: _dataList[i].order});
+				count++;
+			}
+
+			_deptList.sort(function(a, b) {
+				return (a.order + a.key / 100000) - (b.order + b.key / 100000);
+			});
+
+			return _deptList;
+		}
+	}
+});
+
+DepartmentData.prototype.constructor = DepartmentData;
+
+module.exports = new DepartmentData;

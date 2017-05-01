@@ -1,0 +1,53 @@
+var SwitchBox = require('../../components/SwitchBox');
+var PushUpDialog = require('../../components/PushUpDialog');
+var AcrossMbShow = require('../../components/AcrossMbShow');
+var TaskHandle = require('../../handle/teamwork/Task');
+
+module.exports = React.createClass({
+    completed: function() {
+        this.state.value = $(this.refs.EditContent).html();
+        var param = {desc: this.state.value};
+        this.setHeader('提交中');
+        TaskHandle.modify(this.props.taskId, param, function(result) {
+            if(result.code == 200) {
+                return this.props.callBack(this.state.value);
+            }
+            this.setHeader();
+        }.bind(this));
+    },
+    setHeader: function(text) {
+        var headObject = {title: '编辑任务描述', back: {text: '返回', event: this.props.callBack}, operat: {text: '保存', event: this.completed}};
+        if(text) {
+            headObject.operat.text = text;
+            headObject.back.event = headObject.operat.event = function() {};
+        }
+        Interface.setHeader(headObject);
+    },
+    dataRequest: function() {
+        Interface.webEndRefresh();
+    },
+    componentDidMount: function() {
+        Event.on('webBeginRefresh', this.dataRequest);
+    },
+    componentWillUnmount: function() {
+        Event.off('webBeginRefresh', this.dataRequest);
+    },
+    componentWillReceiveProps: function(nProps) {
+        if(nProps.position) {
+            this.setHeader();
+            this.setState({value: nProps.data || ''});
+        }
+    },
+    shouldComponentUpdate: function(nProps, nState) {
+        return this.state != nState;
+    },
+    getInitialState: function() {
+        if(this.props.position) this.setHeader();
+        return {value: this.props.data || ''};
+    },
+    render: function() {
+        return <div className="task_desc_page">
+            <div ref="EditContent" className="content" contentEditable="true" dangerouslySetInnerHTML={{__html: this.state.value || null}} ></div>
+        </div>
+    }
+});

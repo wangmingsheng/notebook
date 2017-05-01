@@ -1,0 +1,21 @@
+ var MemberSelectList = require('../../components/MemberSelectList');
+module.exports = React.createClass({
+	goto: function() {
+		Utils.setUrl('/module3');
+		var ModuleManage = require('../Manage');
+		ModuleManage.getModule('module3', function(Virtual) {
+			Event.trigger('SwitchModule', <Virtual/>);
+		});
+	},
+	getInitialState: function() {
+		return {};
+	},
+	render: function() {
+		return <div className="add_member_page wrap">
+				<ul className="search_box">
+					<li><input type="text" placeholder="&#xe601; 搜索"/></li>
+				</ul>
+			    <MemberSelectList />
+			</div>
+	}
+});

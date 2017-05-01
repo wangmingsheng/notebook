@@ -1,0 +1,13 @@
+module.exports = {
+	setUrl: function(href) {
+		if (href.replace(location.origin, '') != location.href.replace(location.origin, '')) {
+			Interface.webPushInfo(location.href.replace('http://lanm.facework.im', ''));
+			history.pushState(null, null, href);
+			return true;
+		}
+		return false;
+	},
+	toggleModule: function() {
+		
+	}
+};

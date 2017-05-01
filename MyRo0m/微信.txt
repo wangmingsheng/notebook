@@ -1,1 +1,0 @@
-移动端 禁止touchstart默认事件 会使click事件无效

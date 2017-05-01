@@ -1,0 +1,114 @@
+var MemberSelectList = require('../../components/MemberSelectList');
+var SelectList = require('../../components/SelectList');
+var TaskHandle = require('../../handle/teamwork/Task');
+var CheckBox = require('../../components/CheckBox');
+
+module.exports = React.createClass({
+	goto: function() {
+		Utils.setUrl('/newtask');
+		var ModuleManage = require('../Manage');
+		ModuleManage.getModule('newtask', function(Virtual) {
+			Event.trigger('SwitchModule', <Virtual/>);
+		});
+	},
+	setHeader: function() {
+		var list = [{text: '新建任务', event: this.goto}, {text: '新建任务列表', event: function() {}}];
+		var headObject = {title: '默认项目', back: {text: '后退'}, operat: {text: '+', list: list}};
+		Interface.setHeader(headObject);
+	},
+	tabSwitch: function(ev) {
+		switch ($(ev.currentTarget).attr('name')) {
+			case 'task' :
+				this.state.tabIndex = 1;
+				break;
+			case 'member' :
+				this.state.tabIndex = 2;
+				break;
+			case 'count' :
+				this.state.tabIndex = 3;
+				break;
+		}
+		this.setState(this.state);
+	},
+	taskToggle: function(item, ev) {
+		if (ev.currentTarget.checked) {
+			return TaskHandle.complete(item._id, function(result) {
+				if(result.code == 200) {
+					item.is_completed = 1;
+					this.setState(this.state);
+				}
+			}.bind(this));
+		}
+
+		TaskHandle.uncomplete(item._id, function(result) {
+			if(result.code == 200) {
+				item.is_completed = 0;
+				this.setState(this.state);
+			}
+		}.bind(this));
+	},
+	componentDidMount: function() {
+		var projectId = this.props.param.shift();
+		TaskHandle.getOneProjectTask(projectId, function(result) {
+			if(result.code == 200) {
+				this.setState({taskDetailList: result.data.tasks});
+			}
+		}.bind(this));
+		TaskHandle.getOneProject(projectId, function(result) {
+			if(result.code == 200) {
+				this.setState({taskList: result.data.entrys});
+			}
+		}.bind(this));
+
+	},
+	getInitialState: function() {
+		console.log(this.props.param, this.props.param);
+		Interface.alert('vaaa' + this.props.param.join(''));
+		return {taskList: [], taskDetailList: [], tabIndex: 1};
+	},
+	render: function() {
+		if(this.state.taskList.length > 0 && this.state.taskDetailList.length > 0) {
+			var resultTaskList = this.state.taskList.map(function(item) {
+				return <SelectList key={item._id} title={item.name}>
+					{
+						this.state.taskDetailList.map(function(item) {
+							var now = parseInt((new Date()).getTime() / 1000);
+							var tipName = ['tip'];
+							if(now > item.deadline) tipName.push('later');
+							return <li key={item._id}>
+								<div className="check"><CheckBox onChange={this.taskToggle.bind(this, item)} checked={!!item.is_completed} /></div>
+								<div className="text">
+									<div className="top_block">
+										<span className="text">{item.title}</span>
+										<span className={tipName.join(' ')}>{Utils.formatDate(item.deadline, 'MM-DD')}</span>
+									</div>
+								</div>
+							</li>
+						}.bind(this))
+					}
+				</SelectList>
+
+			}.bind(this));
+		}
+
+		return <div className="default_project_page">
+				<div className="tab_box">
+					<ul>
+						<li onClick={this.tabSwitch} name="task" className={this.state.tabIndex == 1 ? 'bkg' : ''}><label>任务</label></li>
+						<li onClick={this.tabSwitch} name="member" className={this.state.tabIndex == 2 ? 'bkg' : ''}><label>成员</label></li>
+						<li onClick={this.tabSwitch} name="count" className={this.state.tabIndex == 3 ? 'bkg' : ''}><label>统计</label></li>
+					</ul>
+				</div>
+				<div className="scroll_box">
+					{this.state.tabIndex != 1 ? null : resultTaskList}
+					{this.state.tabIndex != 2 ? null : <MemberSelectList ref="memberSelectList" />}
+					{this.state.tabIndex != 3 ? null :
+						<div>
+							<div onClick={this.goto}>新建任务</div>
+							<div>新建任务列表</div>
+						</div>
+					}
+				</div>
+		</div>
+	}
+});

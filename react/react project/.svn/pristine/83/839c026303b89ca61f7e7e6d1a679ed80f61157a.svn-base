@@ -1,0 +1,126 @@
+var SelectList = require('../../components/SelectList');
+var CheckBox = require('../../components/CheckBox');
+var SwipeLi = require('../../components/SwipeLi');
+var TaskHandle = require('../../handle/teamwork/Task');
+var ModuleManage = require('../Manage');
+
+module.exports = React.createClass({
+	goto: function(module, data) {
+		Utils.setUrl('/' + module);
+		var ModuleManage = require('../Manage');
+		ModuleManage.getModule(module, function(Virtual) {
+			Event.trigger('SwitchModule', <Virtual taskId={data}/>);
+		});
+	},
+	sheet: function() {
+		var data = [{text: '删除', event: function() { this.run(); }.bind(this), color: 1}];
+		Interface.sheet(data);
+	},
+	changePlanResult: function(item, plan) {
+		TaskHandle.changePlan(item._id, {plan: plan}, function(result) {
+			if(result.code == 200) {
+				Event.trigger('ReleaseLock');
+				item.plan = plan;
+				this.setState(this.state);
+			}
+		}.bind(this));
+	},
+	setPlan: function(item, index) {
+		var data = {
+			title: '计划优先级',
+			list: [{text: '今天', event: this.changePlanResult.bind(this, item, 1)},
+				{text: '接下来', event: this.changePlanResult.bind(this, item, 2)},
+				{text: '以后', event: this.changePlanResult.bind(this, item, 3)},
+				{text: '无',  event: this.changePlanResult.bind(this, item, 0)}
+			]
+		};
+		Interface.alert(data);
+	},
+	selectDate: function(item, ev) {
+         $(ev.currentTarget).next('input').focus().val(Utils.formatDate(item.deadline, 'YYYY-MM-DDTHH:mm'));
+	},
+	setDateState: function(item, ev) {
+		var time = parseInt(new Date(ev.currentTarget.value).getTime() / 1000);
+		TaskHandle.modify(item._id, {deadline: time}, function(result) {
+			if(result.code == 200) {
+				Event.trigger('ReleaseLock');
+				item.deadline = time;
+				this.setState(this.state);
+			}
+		}.bind(this))
+	},
+	taskToggle: function(item, ev) {
+		if (ev.currentTarget.checked) {
+			return TaskHandle.complete(item._id, function(result) {
+				if(result.code == 200) {
+					item.is_completed = 1;
+					this.setState(this.state);
+				}
+			}.bind(this));
+		}
+
+		TaskHandle.uncomplete(item._id, function(result) {
+			if(result.code == 200) {
+				item.is_completed = 0;
+				this.setState(this.state);
+			}
+		}.bind(this));
+	},
+	componentDidMount: function() {
+		TaskHandle.getMyTask(function(result) {
+			this.state.source = result.data.tasks || [];
+			this.state.source.length &&
+			this.state.source.map(function(item, index) {
+				TaskHandle.getOneProject(item.project, function(result) {
+					if(result.code == 200) {
+						item.projectName = result.data && result.data.name;
+					}
+					if(index == this.state.source.length - 1) this.setState(this.state);
+				}.bind(this));
+			}.bind(this));
+		}.bind(this));
+	},
+	setHeader: function() {
+		var headObject = {title: '我的任务', back: {text: '后退'}};
+		Interface.setHeader(headObject);
+	},
+	getInitialState: function() {
+		this.setHeader();
+		return {source: []};
+	},
+	render: function() {
+		var now = parseInt((new Date()).getTime() / 1000);
+		var list = {};
+		this.state.source.forEach(function(item) {
+			var tipName = ['tip'];
+			if(now > item.deadline) tipName.push('later');
+			if(!list[item.plan]) list[item.plan] = [];
+			list[item.plan].push(<SwipeLi key={item._id} swipe={true} >
+					<div className="check"><CheckBox onChange={this.taskToggle.bind(this, item)} checked={!!item.is_completed} /></div>
+					<div className="text" onClick={this.goto.bind(this, 'mytaskjoin', item._id)}>
+						<div className="top_block">
+							<span className="text">{item.title}</span>
+							{
+								!item.deadline ? null :
+									<span className={tipName.join(' ')}>{Utils.formatDate(item.deadline, 'MM-DD')}</span>
+							}
+						</div>
+						<div className="bottom_block">
+							<span className="brand">{item.projectName}</span>
+						</div>
+					</div>
+					<div className="option">
+						<input type="button" className="normal_font" value="&#xe600;" readOnly data-lock="ignore" onClick={this.setPlan.bind(this, item)} />
+						<input type="button" className="normal_font" value="&#xe604;" readOnly data-lock="ignore" onClick={this.selectDate.bind(this, item)} />
+						<input type="datetime-local" data-lock="ignore" onBlur={this.setDateState.bind(this, item)} />
+					</div>
+				</SwipeLi>);
+			}.bind(this));
+		return (<div className="mytask_page">
+					{list[0] && <SelectList title="任务池">{list[0]}</SelectList>}
+					{list[1] && <SelectList title="今天">{list[1]}</SelectList>}
+					{list[2] && <SelectList title="接下来">{list[2]}</SelectList>}
+					{list[3] && <SelectList title="以后">{list[3]}</SelectList>}
+				</div>);
+	}
+});

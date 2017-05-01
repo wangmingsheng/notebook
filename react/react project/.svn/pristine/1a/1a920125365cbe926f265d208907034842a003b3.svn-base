@@ -1,0 +1,102 @@
+var SwitchBox = require('../../components/SwitchBox');
+var PushUpDialog = require('../../components/PushUpDialog');
+var AcrossMbShow = require('../../components/AcrossMbShow');
+var MemberSelectList = require('../../components/MemberSelectList');
+var SelectMembers = require('./SelectMembers');
+
+module.exports = React.createClass({
+	goto: function() {
+		Utils.setUrl('/myjoinedtask');
+		var ModuleManage = require('../Manage');
+		ModuleManage.getModule('myjoinedtask', function(Virtual) {
+			Event.trigger('SwitchModule', <Virtual/>);
+		});
+	},
+	completed: function() {
+		var param = this.state.value;
+		history.back();
+/*		TaskHandle.create(this.state.value.projectId, param, function(result) {
+			if(result.code == 200) {
+				history.back();
+			}
+		});*/
+	},
+	selectMembers: function() {
+		this.state.selectDialog = true;
+		this.setState(this.state);
+		this.refs.pushUpDialog.out();
+	},
+	addMembers: function() {
+		this.refs.pushUpDialog.in();
+        this.state.selectDialog = false;
+		this.setThisHead();
+        this.state.value.assign = this.refs.memberSelectList.getSelectedData();
+		setTimeout(this.setState.bind(this,this.state),500);
+		this.refs.acrossMbShow.updateData(this.transformArr(this.state.value.assign));
+    },
+	searchEvent: function(e) {
+		this.refs.memberSelectList.updateSearch(e.target.value);
+	},
+	taskTittle: function(ev) {
+		this.value.title = $(ev.currentTarget).val();
+	},
+	switchEvent: function() {
+		this.state.value.visibility = !this.state.value.visibility;
+		this.setState(this.state);
+	},
+	setThisHead: function() {
+		var headObject = {title: '新建任务', back: '后退', operat: {text: '完成', event: this.completed}};
+		Interface.setHeader(headObject);
+	},
+    transformHaXi: function(obj) {
+	    var result = {};
+        for(var i in obj) {
+            if(obj[i]) result[i] = true;
+        }
+        return result;
+    },
+    transformArr: function(obj) {
+        var result = [];
+        var j = 0;
+        for(var i in obj) {
+            if(obj[i]) result[j++] = obj[i];
+        }
+        return result;
+    },
+	getInitialState: function() {
+		this.setThisHead();
+		var value = { projectId:'', assign: {}, deadline: 0, entry: "", title: "", visibility: true};
+		return {value:value, selectDialog: false};
+	},
+	render: function() {
+		return <div className="newtask_page">
+					<ul onClick={this.goto}>
+						<li><input type="text" placeholder="任务名称" onChange={this.taskTittle} /></li>
+					</ul>
+					<ul className="jump_option_list">
+						<li onClick={this.selectMembers}>
+                            <div className="option">
+                                <span>分配给</span>
+                                <div className="show"><AcrossMbShow ref="acrossMbShow"/></div>
+                            </div>
+                            <div className="right_block"><span className="tip"></span><i className="icon">&#xe606;</i></div>
+                        </li>
+						<li><div className="option"><span>截止时间</span></div><span className="right_block"><span className="tip"></span><i className="icon">&#xe606;</i></span></li>
+					</ul>
+					<ul className="jump_option_list">
+						<li><div className="option"><span>私密任务</span></div><span className="right_block"><SwitchBox checked={this.state.value.visibility} onChange={this.switchEvent}/></span></li>
+					</ul>
+					<PushUpDialog ref="pushUpDialog">
+						{
+							!this.state.selectDialog ? null :
+							<div className="add_member_page">
+								<ul className="search_box" onClick={this.addMembers}>
+									<li><input type="text" placeholder="&#xe601; 搜索" onChange={this.searchEvent}/></li>
+								</ul>
+								<MemberSelectList ref="memberSelectList" selectData={this.transformHaXi(this.state.value.assign)} />
+							</div>
+						}
+					</PushUpDialog>
+			</div>
+	}
+});

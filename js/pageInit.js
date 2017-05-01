@@ -31,6 +31,7 @@
   });
 })();
 
+//防止iPhone双击抖动
 !(function stopIphoneDoubleClickEvent()
 {
   var agent = navigator.userAgent.toLowerCase();        //检测是否是ios
@@ -62,7 +63,8 @@ function domLoaded() {
 }
 document.addEventListener('DOMContentLoaded', domLoaded);
 
-;
+
+//禁止部分区域的默认事件
 document.addEventListener('touchmove', function (ev){
     ev.preventDefault();
 }, false);

@@ -1,5 +1,49 @@
-1. npm
-npm install module@latest -g //更新最新
-cls //清除窗口
+﻿
+input date  datetime-local  绝对定位且是在滑动区时，使滑动时不显示
 
-2.
+
+调试样式的时候多用background-color进行调试
+
+服务器不但可以获取ip也能获取域名？
+
+
+数组也是对象，但是数组用[]等标准方法定义的成员是不可遍历的，用点号赋值的属性可遍历
+
+变量作用，变量生命周期等问题，数组成员被splice删除了，也不一定会从内存中移除，当它有被另一个对象所引用时
+
+input框的键盘输入值keydown 返回false（ps：必须是false，为啥？内部实现有关系）时，键盘的值输入不进去   
+两变量比较的规则：1：两数值 2 有一个树字符串，另一个转为字符串 3 一个对象，会把对象先转换为valuof tostring  3 一个boolen 先转换为数字
+
+jquery closest 向上遍历第一个  $object.is('')  比较dom
+
+fieldset 给表单分组  <legend> 标签为 fieldset 元素定义标题。
+h5中 
+disabled	disabled规定应该禁用 fieldset。
+form	form_id	规定 fieldset 所属的一个或多个表单。
+name	value	规定 fieldset 的名称。
+
+
+确定是否缓存 改html 或者弄个背景色
+
+xhrFields = {withCredentials: true}; 允许跨域  如果是上传文件流方式上传  可能会报错  把该字段去掉试试
+
+
+zepto tap事件？？ 和click区别
+
+
+php 和go 语言的ajax不一样 具体看项目
+
+
+js让其它dom失去焦点  对某个input focus 
+
+$dom.attr('', value | null)  $dom.prop('', true | false)
+
+chrom bug input file 不弹出了
+
+
+
+源的概念  站点的概念  
+ajax erro 原因 没响应(网络断了，被服务器禁止了，请求路径不对，请求端口不对)   
+
+
+浏览器缓存的问题，一般url缓存都是加上随机数来解决？

@@ -1,0 +1,27 @@
+var MemberSelectList = require('./MemberSelectList');
+module.exports = React.createClass({
+    searchEvent: function(e) {
+        this.setState({search: $(e.currentTarget).val()});
+    },
+    getSelectedData: function() {
+       return this.refs.memberSelectList.getSelectedData();
+    },
+    componentWillReceiveProps: function(nProps) {
+        if (nProps.search != this.state.key) {
+        }
+    },
+    shouldComponentUpdate: function(nProps, nState) {
+        return this.state != nState;
+    },
+    getInitialState: function() {
+        return {search: '', selected: this.props.selected || {}};
+    },
+    render: function() {
+        return 	<div className="add_member_page">
+            <ul className="search_box" onClick={this.props.pushIn}>
+                <li><input type="text" placeholder="&#xe601; 搜索" onChange={this.searchEvent}/></li>
+            </ul>
+            <MemberSelectList ref="memberSelectList" search={this.state.search} selected={this.state.selected} />
+        </div>
+    }
+});

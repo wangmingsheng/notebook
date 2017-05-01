@@ -1,0 +1,176 @@
+var SwitchBox = require('../../components/SwitchBox');
+var PushUpDialog = require('../../components/PushUpDialog');
+var AcrossMbShow = require('../../components/AcrossMbShow');
+var JumpOptionItem = require('../../components/JumpOptionItem');
+var SingelMember = require('./components/SingelMember');
+var TaskHandle = require('../../handle/teamwork/Task');
+var ProjectData = require('../../data/Project');
+var PopUpDialog = require('../../components/PopUpDialog');
+
+module.exports = React.createClass({
+	completed: function() {
+		var param ={
+			title: $(this.refs.taskTittle).val(),
+			assign: Utils.transHaXiToStr(this.state.selected),
+			entry: this.state.value.entry._id,
+			deadline: this.state.value.deadline
+		};
+		this.closeDateTimeDialog();
+		Utils.closeKeyBord(this.refs.taskTittle);
+
+		if(!param.title.trim()) {
+			Interface.alert('任务名称不能为空');
+			return false;
+		}
+		if(!param.entry) {
+			Interface.alert('任务清单不能为空');
+			return false;
+		}
+		this.setHeader('提交中');
+
+		TaskHandle.create(this.props.param[0], param, function(result) {
+			if(result.code == 200) {
+				return history.back();
+			}
+			this.setHeader();
+		}.bind(this));
+	},
+	pushDialog: function(type, selectedData) {
+		switch(type) {
+			case 'memberOut':
+				Utils.setUrl(location.pathname + '/part');
+				break;
+			case 'memberIn':
+				this.setHeader();
+				selectedData && (this.state.selected  = $.extend({}, selectedData));
+				break;
+		}
+		this.setState({selectDialog: type});
+	},
+	closeDateTimeDialog: function() {
+		if(this.state.dateBlurFlag) {
+			return this.setState({dateBlurFlag: false}, this.refs.dateTime.blur.bind(this.refs.dateTime));
+
+		}
+		this.refs.dateTime.blur();
+	},
+	switchEvent: function() {
+		this.state.value.visibility = !this.state.value.visibility;
+		this.setState(this.state);
+	},
+	setHeader: function(text) {
+		var headObject = {
+			title: '新建任务',
+			back: {text: '后退', event: function() {
+				this.closeDateTimeDialog();
+				Utils.closeKeyBord(this.refs.taskTittle);
+				history.back();
+			}.bind(this)},
+			operat: {text: '完成', event: this.completed}
+		};
+		if(text) {
+			headObject.operat.event = headObject.back.event = function() {};
+			headObject.operat.text = text;
+			headObject.operat.disabled = true;
+		}
+		Interface.setHeader(headObject);
+	},
+	dateChange: function(e) {
+		this.state.source.defaultTime = e.currentTarget.value;
+		this.setState(this.state);
+	},
+	selectDate: function(ev) {
+		this.state.dateBlurFlag = true;
+		this.state.value.defaultTime = Utils.formatDate(this.state.value.deadline, 'YYYY-MM-DDTHH:mm');
+		if(!this.state.value.deadline) {
+			this.state.value.defaultTime = Utils.formatDate((new Date()).getTime() / 1000 - Config.timeCut, 'YYYY-MM-DD') + 'T00' + ':00';
+		}
+		var $dom = $(ev.currentTarget).find('input');
+		this.setState(this.state, $dom.focus.bind($dom));
+	},
+	setDeadlineDate: function(e) {
+		this.state.value.deadline = parseInt(Date.parse(e.currentTarget.value) / 1000 - Config.timeCut);
+		this.setState(this.state);
+	},
+	selectEntry: function() {
+		var data = ProjectData.source[this.props.param[0]].entrys.map(function(item) {
+						return {text: item.name, event: this.setEntry.bind(this, item)}
+					}.bind(this));
+		this.setState({entrys: data}, this.refs.taskEntry.action.bind(this.refs.taskEntry, true));
+		Interface.sheet(data);
+	},
+	setEntry: function(item) {
+		this.state.value.entry = {
+			_id: item._id,
+			name: item.name
+		};
+		this.refs.taskEntry.action(false);
+		this.setState(this.state);
+	},
+	dataRequest: function() {
+		Interface.webEndRefresh();
+	},
+	componentDidMount: function() {
+		Event.on('webBeginRefresh', this.dataRequest);
+	},
+	componentWillUnmount: function() {
+		Event.off('webBeginRefresh', this.dataRequest);
+	},
+	getInitialState: function() {
+		this.setHeader();
+		var value = {assign: '', deadline: 0, title: '', entry: {_id: '', name: ''}, visibility: false, defaultTime: ''};
+		return {value: value, selectDialog: false, selected: {}, dateBlurFlag: true, entrys: []};
+	},
+	render: function() {
+		var timeTip = null;
+		if(this.state.value.deadline) timeTip = Utils.formatDate(this.state.value.deadline, 'YYYY-MM-DD') + Utils.filterHHmm00(Utils.formatDate(this.state.value.deadline, 'HH:mm'));
+		return <div className="newtask_page">
+					<ul>
+						<li className="task_name">
+							<input ref="taskTittle" type="text" placeholder="任务名称" />
+						</li>
+					</ul>
+					<ul>
+						<JumpOptionItem title="分配给" onClick={this.pushDialog.bind(this, 'memberOut')}>
+							<AcrossMbShow data={this.state.selected} />
+						</JumpOptionItem>
+						<JumpOptionItem title="截止时间" onClick={this.selectDate}>
+							<input
+								ref="dateTime"
+								type="datetime-local"
+								value={this.state.value.defaultTime}
+								onBlur={this.state.dateBlurFlag && this.setDeadlineDate}
+								onChange={this.dateChange}/>
+								{timeTip}
+						</JumpOptionItem>
+					</ul>
+					<ul>
+						<JumpOptionItem title="任务清单" onClick={this.selectEntry}>
+							{this.state.value.entry.name}
+						</JumpOptionItem>
+					</ul>
+					<ul>
+						<JumpOptionItem title="私密任务" onClick={this.selectEntry} icon={false}>
+							<SwitchBox checked={this.state.value.visibility} onChange={this.switchEvent}/>
+						</JumpOptionItem>
+					</ul>
+					<PushUpDialog position={this.state.selectDialog == 'memberOut'}>
+						<SingelMember
+							selected={this.state.selected}
+							position={this.state.selectDialog == 'memberOut'}
+							callBack={this.pushDialog.bind(this, 'memberIn')} />
+					</PushUpDialog>
+
+					<PopUpDialog ref="taskEntry" datalock="ignore">
+						<h3 style={{textAlign: 'center', margin: '10px 0', color: '#9f9f9f'}}>任务清单</h3>
+						{
+							this.state.entrys.map(function(item, index) {
+								return <div key={index} onClick={item.event} style={{margin: '5px 0', textAlign: 'center', color: '#0679fe'}}>
+									{item.text}
+								</div>
+							}.bind(this))
+						}
+					</PopUpDialog>
+			</div>
+	}
+});
