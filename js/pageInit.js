@@ -64,7 +64,7 @@ function domLoaded() {
 document.addEventListener('DOMContentLoaded', domLoaded);
 
 
-//禁止部分区域的默认事件
+//禁止部分区域的默认事件(iphone的橡皮筋效果）
 document.addEventListener('touchmove', function (ev){
     ev.preventDefault();
 }, false);
