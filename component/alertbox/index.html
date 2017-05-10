@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+</head>
+<style>
+    .alertbox{
+        display: none;
+    }
+    .alertbox.show{
+        display: block;
+    }
+    .alertbox .mask{
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    .alertbox .body_content{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 300px;
+        height: 156px;
+        -webkit-transform: translate(-50%,-50%);
+        transform: translate(-50%,-50%);
+        z-index: 1000;
+        background-color: #ffffff;
+        text-align: center;
+    }
+    .alertbox .body_content .title{
+        height: 50px;
+        line-height: 50px;
+        font-size: 14px;
+        color: #333333;
+    }
+    .alertbox .body_content .content{
+        padding: 20px 0;
+        line-height: 20px;
+        font-size: 14px;
+        color: #666666;
+        box-shadow: 0 1px #dddddd;
+    }
+    .alertbox .body_content .option{
+        height: 40px;
+        line-height: 40px;
+        font-size: 16px;
+        color: #FF6336;
+    }
+</style>
+<body>
+<div class="alertbox show">
+    <div class="mask"></div>
+    <div class="body_content">
+        <div class="title">提示</div>
+        <div class="content">支付结果获取失败</div>
+        <div class="option">刷新</div>
+    </div>
+</div>
+</body>
+</html>
