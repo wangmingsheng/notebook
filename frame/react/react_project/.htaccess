@@ -1,0 +1,7 @@
+RewriteEngine on
+RewriteRule ^mytask\/.*?$ index.html
+RewriteRule ^project\/.*?$ index.html
+RewriteRule ^partaketask\/.*?$ index.html
+RewriteRule ^detail\/.*?$ index.html
+RewriteRule ^create\/.*?$ index.html
+RewriteRule ^createentry\/.*?$ index.html
