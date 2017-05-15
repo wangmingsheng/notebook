@@ -1,5 +1,0 @@
-RewriteEngine on
-RewriteRule ^mytask/.* index.html/mytaskjoin
-RewriteRule ^project/.* index.html/project
-RewriteRule ^partaketask/.* index.html/partaketask
-RewriteRule ^detail/.* index.html/detail
