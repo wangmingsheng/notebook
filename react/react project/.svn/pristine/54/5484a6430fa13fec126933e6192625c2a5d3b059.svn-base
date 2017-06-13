@@ -1,4 +1,0 @@
-var ReactDOM = require('react-dom');
-var Index = require('../application/view/Index');
-
-ReactDOM.render(React.createElement(Index), document.getElementById('bodyer'));
