@@ -1,0 +1,8 @@
+ userNow: function (item, e) {
+               // e.stopPropagation(); 注释掉这个 href是不会先执行的
+                location.href = item.useUrl;
+            },
+            cardDetail: function (item) {
+                location.href = item.detailUrl;
+            },
+
