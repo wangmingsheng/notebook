@@ -6,7 +6,7 @@ var data = require('./data');
 var server = function(request,response){
     //允许跨域
     //请求头为Credentials origin 不能为*
-    response.setHeader('Access-Control-Allow-Origin', 'http://andy.facework.im');
+    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:63342');
     response.setHeader('Access-Control-Allow-Credentials', true);
     response.setHeader('Access-Control-Allow-Methods', 'POST,GET,OPTIONS,PUT,DELETE');
     response.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Engaged-Auth-Token');
@@ -16,7 +16,7 @@ var server = function(request,response){
     if(request.method == "GET"){
         var params = [];
         params = url.parse(request.url,true).query;
-        response.write(JSON.stringify(getData(params.id)));
+        response.write(JSON.stringify(getData()));
         response.end();
     }else{
         var postdata = "";
@@ -36,13 +36,9 @@ var server = function(request,response){
 };
 
 var getData = function(id) {
-    if (!id) return {code: 200, data: {rows: data.slice(0, 21)}};
-    for (var i = 0; i < data.length; i++) {
-        if (data[i]._id == id) {
-            return {code: 200, data: {rows: data.slice(i, i + 21)}};
-        }
-    }
-    return {code: 200, data: {rows: []}};
+
+    return {status: 0, data: data};
+
 };
 
 //计算
