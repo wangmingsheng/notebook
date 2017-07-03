@@ -44,6 +44,7 @@
   },
   "scripts": {
     "start": "babel-node ./bin/www",
+    "start2": "node ./build/bundle",
     "debug": "babel-node debug ./bin/www",
     "test": "./node_modules/.bin/mocha -t 10000 --compilers js:babel-core/register --recursive --reporter mochawesome",
     "apidoc": "./node_modules/.bin/apidoc -i controllers/ -o public/apidoc"

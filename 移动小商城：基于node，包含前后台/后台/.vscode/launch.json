@@ -3,12 +3,13 @@
     // 悬停以查看现有属性的描述。
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "babel-node",
-            "request": "launch",
-            "name": "启动程序",
-            "program": "${workspaceRoot}\\bin\\www"
-        }
-    ]
+    "configurations": [{
+        "type": "node",
+        "request": "launch",
+        "protocol": "inspector",
+        "name": "启动程序",
+        "sourceMaps": true,
+        "program": "${workspaceRoot}/bin/www.js",
+        "outFiles": ["${workspaceRoot}/build/bundle.js"]
+    }]
 }
