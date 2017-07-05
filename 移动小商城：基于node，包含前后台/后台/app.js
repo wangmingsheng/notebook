@@ -26,11 +26,6 @@ const mongodb = new mongo(app, config)
 const store = new SessionStore({ url: mongodb.dblink })
 const auth = new jwtauth()
 
-let temp = new Object({ name: '123', value: 'haha' })
-
-
-new Object().toString();
-
 // 判断文件夹是否存在, 若不存在则创建之
 mkdirsSync(config.upload.tmp)
 mkdirsSync(config.upload.path)
