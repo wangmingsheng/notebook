@@ -15,3 +15,30 @@ new func(); 当func return 基础数据类型时，new func()将执行func 并�
      }
  }
 * */
+
+Function.prototype.mybind = function() {
+    var runObject = arguments[0];
+    var args = [];
+    var bindFunction = this;
+
+    for(var i =1; i < arguments.length; i++) {
+        args.push(arguments[i])
+    }
+
+    runObject.bindFunction = bindFunction;
+    return function() {
+        runObject.bindFunction(args);
+    }
+}
+var value = 6;
+function A() {
+    console.log(this)
+    console.log(this.value);
+}
+
+var object = {
+    value: 5
+}
+
+A();
+A.mybind(object)();
